@@ -411,6 +411,7 @@ tr:hover td{background:rgba(46,117,182,.07);}
       <div class="logo">&#128202; PANEL DIRECCIÓN</div>
     </div>
     <button class="back" onclick="cargarPanel()" style="border-color:var(--accent);color:var(--accent);">&#128260; ACTUALIZAR</button>
+      <button onclick="generarPDFCurso()" style="background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);color:var(--accent);padding:6px 14px;border-radius:6px;font-size:.75rem;font-weight:700;cursor:pointer;margin-left:6px;">&#128196; PDF CURSO</button>
   </div>
   <div class="body">
     <div class="stats">
@@ -720,7 +721,7 @@ async function cargarPanel(){
     if(!data.length){document.getElementById('ptbody').innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">Sin registros</td></tr>';return;}
     document.getElementById('ptbody').innerHTML=[...data].reverse().map((r,i)=>{
       const idx=data.length-1-i,col=r[3]==='L'?'var(--leve)':r[3]==='G'?'var(--grave)':'var(--rojo)';
-      return'<tr><td style="color:var(--muted);font-size:.7rem;white-space:nowrap">'+(r[0]||'')+'</td><td><strong>'+(r[1]||'')+'</strong></td><td style="font-size:.74rem">'+(r[2]||'')+'</td><td><span class="tt" style="background:'+col+'22;color:'+col+'">'+(r[3]==='L'?'LEVE':r[3]==='G'?'GRAVE':'MUY GRAVE')+'</span><br><small style="color:var(--muted)">'+(r[4]||'')+'</small></td><td style="font-size:.7rem">'+(r[5]||'')+'</td><td style="color:var(--muted);font-size:.7rem">'+(r[6]||'')+'</td><td><button onclick="elimReg('+idx+')" style="background:rgba(255,68,102,.15);border:1px solid rgba(255,68,102,.3);color:var(--rojo);border-radius:4px;padding:2px 7px;cursor:pointer;font-size:.7rem;">✕</button></td></tr>';
+      const nomEsc=(r[2]||'').replace(/'/g,"\\'").replace(/"/g,'\\"');const curEsc=(r[1]||'');return'<tr><td style="color:var(--muted);font-size:.7rem;white-space:nowrap">'+(r[0]||'')+'</td><td><strong>'+(r[1]||'')+'</strong></td><td style="font-size:.74rem">'+(r[2]||'')+'</td><td><span class="tt" style="background:'+col+'22;color:'+col+'">'+(r[3]==='L'?'LEVE':r[3]==='G'?'GRAVE':'MUY GRAVE')+'</span><br><small style="color:var(--muted)">'+(r[4]||'')+'</small></td><td style="font-size:.7rem">'+(r[5]||'')+'</td><td style="color:var(--muted);font-size:.7rem">'+(r[6]||'')+'</td><td style="display:flex;gap:3px;"><button onclick="generarPDF(\''+(r[2]||'').replace(/'/g,\"\\\\'\")+\"\',\"'+curEsc+'\")" style="background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.3);color:var(--accent);border-radius:4px;padding:2px 7px;cursor:pointer;font-size:.7rem;">📄</button><button onclick="elimReg('+idx+')" style="background:rgba(255,68,102,.15);border:1px solid rgba(255,68,102,.3);color:var(--rojo);border-radius:4px;padding:2px 7px;cursor:pointer;font-size:.7rem;">✕</button></td></tr>';
     }).join('');
   }catch(e){document.getElementById('ptbody').innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--rojo)">⚠️ Sin conexión</td></tr>';}
 }
@@ -1013,5 +1014,82 @@ if('serviceWorker' in navigator){
   });
 }
 actualizarEstadoRed();
+
+// ═══════════════════════════════════════════════════════
+// PDF POR ESTUDIANTE
+// ═══════════════════════════════════════════════════════
+function generarPDF(nombre, curso){
+  var todos=[].concat(regsG,pend);
+  var faltas=todos.filter(function(r){return (r[2]||'')=== nombre && (r[1]||'')=== curso;});
+  var estInfo=(ED[curso]||[]).find(function(e){return e.nombre===nombre;})||{num:'—'};
+  var nL=faltas.filter(function(r){return r[3]==='L';}).length;
+  var nG=faltas.filter(function(r){return r[3]==='G';}).length;
+  var nMG=faltas.filter(function(r){return r[3]==='MG';}).length;
+  function getArt(cod){
+    var tipos=['L','G','MG'];
+    for(var i=0;i<tipos.length;i++){
+      var s=(INF[tipos[i]]||[]).find(function(x){return x.c===cod;});
+      if(s) return 'Art. '+s.a+' &mdash; '+s.t;
+    }
+    return cod;
+  }
+  var hoy=new Date().toLocaleDateString('es-BO',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  var filas=faltas.length?faltas.map(function(r){
+    var col=r[3]==='L'?'#e67e22':r[3]==='G'?'#e74c3c':'#8e44ad';
+    var tipo=r[3]==='L'?'LEVE':r[3]==='G'?'GRAVE':'MUY GRAVE';
+    return '<tr><td style="padding:6px 8px;font-size:11px;color:#555;white-space:nowrap">'+(r[0]||'&mdash;')+'</td>'
+      +'<td style="padding:6px 8px;text-align:center"><span style="background:'+col+'22;color:'+col+';padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700">'+tipo+'</span></td>'
+      +'<td style="padding:6px 8px;font-size:11px;font-weight:700;color:'+col+'">'+(r[4]||'&mdash;')+'</td>'
+      +'<td style="padding:6px 8px;font-size:11px;color:#333">'+getArt(r[4])+'</td>'
+      +'<td style="padding:6px 8px;font-size:11px;color:#777">'+(r[6]||'&mdash;')+'</td></tr>';
+  }).join(''):'<tr><td colspan="5" style="text-align:center;padding:20px;color:#999;font-style:italic">Sin registros de faltas</td></tr>';
+
+  var aviso=(nG>0||nMG>0)?'<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:10px 14px;margin:14px 20px 0;font-size:11px;color:#856404">&#9888; <strong>Atenci&oacute;n:</strong> Se han registrado faltas <strong>graves o muy graves</strong> que requieren comunicaci&oacute;n formal con la Direcci&oacute;n de la Unidad Educativa (Art. 20&ndash;21 del Reglamento Interno NSP 2026).</div>':'';
+
+  var contenido='<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">'
+    +'<title>Informe &mdash; '+nombre+'</title>'
+    +'<style>@page{margin:1.5cm;}body{font-family:Arial,sans-serif;color:#222;margin:0;padding:0;}'
+    +'.header{background:#1e3a5f;color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;}'
+    +'.logo{font-size:22px;font-weight:900;color:#FFD700;letter-spacing:2px;}'
+    +'.ficha{background:#f8f9fa;border:1px solid #dee2e6;border-radius:6px;padding:12px 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 20px 0;}'
+    +'.lbl{font-size:10px;color:#666;text-transform:uppercase;letter-spacing:.5px;}'
+    +'.val{font-size:13px;font-weight:700;color:#1e3a5f;}'
+    +'.semaforo{display:flex;gap:10px;margin:14px 20px 0;}'
+    +'.sem{flex:1;text-align:center;padding:10px;border-radius:8px;}'
+    +'table{width:100%;border-collapse:collapse;margin:14px 0 0;}thead tr{background:#1e3a5f;color:#fff;}'
+    +'thead th{padding:7px 8px;text-align:left;font-size:10px;letter-spacing:.5px;}'
+    +'tbody tr:nth-child(even){background:#f8f9fa;}'
+    +'.firmas{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin:30px 20px 0;}'
+    +'.firma-line{border-top:1px solid #333;margin-top:40px;padding-top:4px;font-size:10px;color:#555;text-align:center;}'
+    +'</style></head><body>'
+    +'<div class="header"><div><div class="logo">NSP 2026</div>'
+    +'<div style="font-size:10px;opacity:.8">U.E. Marista &ldquo;Nuestra Se&ntilde;ora del Pilar&rdquo; &mdash; Fe y Alegr&iacute;a</div>'
+    +'<div style="font-size:10px;opacity:.8">Secundaria Comunitaria Productiva &mdash; Cochabamba, Bolivia</div></div>'
+    +'<div style="text-align:right"><div style="font-size:13px;font-weight:700">INFORME DISCIPLINARIO</div>'
+    +'<div style="font-size:10px;opacity:.8">Para conocimiento de padres y tutores</div></div></div>'
+    +'<div class="ficha">'
+    +'<div><div class="lbl">Estudiante</div><div class="val">'+nombre+'</div></div>'
+    +'<div><div class="lbl">Curso</div><div class="val">'+curso+' &nbsp;&middot;&nbsp; N&deg; '+estInfo.num+'</div></div>'
+    +'<div><div class="lbl">Gesti&oacute;n</div><div class="val">2026</div></div>'
+    +'<div><div class="lbl">Total faltas</div><div class="val">'+faltas.length+'</div></div></div>'
+    +'<div class="semaforo">'
+    +'<div class="sem" style="background:#fff3e0;color:#e67e22;border:1px solid #f0a500"><div style="font-size:26px;font-weight:900">'+nL+'</div><div style="font-size:10px;font-weight:700">LEVES</div></div>'
+    +'<div class="sem" style="background:#fdecea;color:#e74c3c;border:1px solid #e74c3c"><div style="font-size:26px;font-weight:900">'+nG+'</div><div style="font-size:10px;font-weight:700">GRAVES</div></div>'
+    +'<div class="sem" style="background:#f3e5f5;color:#8e44ad;border:1px solid #8e44ad"><div style="font-size:26px;font-weight:900">'+nMG+'</div><div style="font-size:10px;font-weight:700">MUY GRAVES</div></div></div>'
+    +'<div style="margin:14px 20px 0"><table><thead><tr>'
+    +'<th>FECHA / HORA</th><th>TIPO</th><th>C&Oacute;DIGO</th><th>INFRACCI&Oacute;N &mdash; ART&Iacute;CULO</th><th>DOCENTE</th>'
+    +'</tr></thead><tbody>'+filas+'</tbody></table></div>'
+    +aviso
+    +'<div class="firmas">'
+    +'<div><div class="firma-line"><strong>Docente responsable</strong><br>U.E. Marista NSP 2026</div></div>'
+    +'<div><div class="firma-line"><strong>Padre / Madre / Tutor</strong><br>Firma de recepci&oacute;n</div></div></div>'
+    +'<div style="font-size:9px;color:#999;text-align:right;margin:10px 20px 0">Generado: '+hoy+' &middot; Sistema Disciplinario NSP 2026</div>'
+    +'</body></html>';
+
+  var w=window.open('','_blank','width=850,height=700');
+  if(!w){showToast('Permite ventanas emergentes para generar PDF',true);return;}
+  w.document.open();w.document.write(contenido);w.document.close();
+  setTimeout(function(){w.print();},800);
+}
 </script>
 </body>
