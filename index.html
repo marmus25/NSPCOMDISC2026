@@ -444,7 +444,7 @@ tr:hover td{background:rgba(46,117,182,.07);}
 <div class="hint">&#8593;&#8595; Navegar &nbsp;&#9646; OK &nbsp;&#8592; Volver</div>
 
 <script>
-const SU='https://script.google.com/macros/s/AKfycbzo48ywWcrAdt0OzGYlHQV9UX1_Osorw_Fu6-fE-Thm4miXmlQTumHdijuD7qxqFdZA/exec';
+const SU='https://script.google.com/macros/s/AKfycbxvpJrZ58FkCbOCE8fRRKewWZp342l2HAdAgXFx2Kd1Oh7HkPcEkBsADd9qF96Fxg1a/exec';
 const CURSOS=[{id:'2A',n:'2do "A"'},{id:'2B',n:'2do "B"'},{id:'2C',n:'2do "C"'},{id:'3A',n:'3ro "A"'},{id:'3B',n:'3ro "B"'},{id:'3C',n:'3ro "C"'},{id:'4A',n:'4to "A"'},{id:'4B',n:'4to "B"'},{id:'4C',n:'4to "C"'},{id:'5A',n:'5to "A"'},{id:'5B',n:'5to "B"'},{id:'5C',n:'5to "C"'},{id:'6A',n:'6to "A"'},{id:'6B',n:'6to "B"'},{id:'6C',n:'6to "C"'}];
 const DOCS=[{a:'Música',n:'Prof. Marcelo'},{a:'Biología',n:'Prof. Beatriz'},{a:'Biología',n:'Prof. Mónica'},{a:'Biología',n:'Prof. Leydi'},{a:'Física',n:'Prof. Victor Quiroz'},{a:'Química',n:'Prof. Victor Paricagua'},{a:'Lenguaje',n:'Prof. Anai'},{a:'Lenguaje',n:'Prof. Liliana B.'},{a:'Inglés',n:'Prof. Jhannet'},{a:'Cs. Sociales',n:'Prof. Ronald'},{a:'Cs. Sociales',n:'Prof. Mirian Aguilar'},{a:'Cs. Sociales',n:'Prof. Mirian Orellana'},{a:'Cs. Sociales',n:'Prof. Mirian Taquichiri'},{a:'Ed. Física',n:'Prof. Victor Quispe'},{a:'Ed. Física',n:'Prof. Isaac Jiménez'},{a:'Artes',n:'Prof. Magali'},{a:'Artes',n:'Prof. Valentina Colque'},{a:'Psicología',n:'Prof. Aida Arauco'},{a:'Filosofía',n:'Prof. Dubeysa Arévalo'},{a:'Valores',n:'Prof. Victor Mamani'},{a:'Valores',n:'Prof. Roxana Araoz'},{a:'Matemáticas',n:'Prof. Eddy Osinaga'},{a:'Matemáticas',n:'Prof. Juan Aguilar'},{a:'Matemáticas',n:'Prof. Jorge C.'},{a:'Matemáticas',n:'Prof. Lourdes Gutiérrez'},{a:'Matemáticas',n:'Prof. Roy'},{a:'Música',n:'Prof. Olga Chambi'},{a:'Tecnología',n:'Prof. Silvio Pacheco'},{a:'Comunicación',n:'Prof. Rosemary'}];
 const INF={L:[{c:'L-1',t:'Llegada tarde',a:'19.3'},{c:'L-2',t:'No porta Agenda Escolar',a:'19.1'},{c:'L-3',t:'Uniforme / tintes / maquillaje',a:'19.5'},{c:'L-4',t:'No entrega tareas',a:'19.4'},{c:'L-5',t:'Distrae o actividades ajenas',a:'19.6'},{c:'L-6',t:'Sin material escolar',a:'19.7'}],G:[{c:'G-1',t:'Celular o dispositivo en clase',a:'12.21'},{c:'G-2',t:'Copia / plagio digital',a:'20.2'},{c:'G-3',t:'Abandona la U.E.',a:'20.10'},{c:'G-4',t:'Insultos / lenguaje soez',a:'20.20'},{c:'G-5',t:'Daño a instalaciones',a:'20.11'},{c:'G-6',t:'Falsifica firmas / notas',a:'20.17'},{c:'G-7',t:'Burlas / apodos / humillación',a:'20.6'},{c:'G-8',t:'Oculta boletín de disciplina',a:'20.12'}],MG:[{c:'MG-1',t:'Peleas físicas',a:'21.1'},{c:'MG-2',t:'Alcohol o drogas',a:'21.3a'},{c:'MG-3',t:'Armas u objetos peligrosos',a:'21.3b'},{c:'MG-4',t:'Acoso / amenazas',a:'21.5'},{c:'MG-5',t:'Hurto',a:'21.4'},{c:'MG-6',t:'Discriminación',a:'21.10'}]};
@@ -668,7 +668,7 @@ function mostrarFin(){
 async function enviar(doc){
   const total=pend.length;
   if(!total){goto('sr');return;}
-  const payload=pend.map(p=>({curso:p[1],estudiante:p[2]||'(sin nombre)',tipo:p[3],codigo:p[4],descripcion:p[5],docente:doc}));
+  const payload=pend.map(p=>({curso:p[1],estudiante:p[2]||'(sin nombre)',tipo:p[3],codigo:p[4],descripcion:p[5],docente:doc,version:'NSP2026v2'}));
   pend.forEach(p=>{p[6]=doc;regsG.push(p);});
   pend=[];actualizarBadge();renderCursos();
   if(navigator.onLine){
@@ -986,6 +986,7 @@ async function rqGuardar() {
         body: JSON.stringify({
           curso:cid, estId:est.id, nombre:est.nombre,
           tipo:f.tipo, codigo:f.codigo, descripcion:f.descripcion,
+          version:'NSP2026v2',
           articulo:f.articulo, fecha:fechaFmt,
           docente:docente, origen:'registro-rapido'
         })
