@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1e3a5f">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Disciplina NSP">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<title>Disciplina NSP 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0D1B2E;--card:#162840;--border:#2A4A70;--accent:#FFD700;--blue:#1E3A5F;--lblue:#2E75B6;--text:#E8F0FF;--muted:#7A9CC0;--green:#2ECC71;--leve:#F5A623;--grave:#E05A00;--rojo:#FF4466;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);width:100vw;height:100vh;overflow:hidden;display:flex;flex-direction:column;}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,var(--blue),#0A1525);border-bottom:3px solid var(--accent);
+  padding:10px 28px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.logo{font-family:'Bebas Neue';font-size:1.6rem;color:var(--accent);letter-spacing:2px;}
+.sub{font-size:.68rem;color:var(--muted);}
+.clock{font-family:'Bebas Neue';font-size:1.5rem;color:var(--lblue);}
+.back{background:transparent;border:2px solid var(--border);color:var(--muted);
+  font-family:'Bebas Neue';font-size:.9rem;padding:6px 14px;border-radius:8px;cursor:pointer;outline:none;}
+.back:focus{border-color:var(--muted);color:var(--text);}
+.curso-lbl{font-family:'Bebas Neue';font-size:1.4rem;color:var(--text);letter-spacing:1px;}
+
+/* SCREENS */
+.scr{display:none;flex:1;flex-direction:column;overflow:hidden;}
+.scr.on{display:flex;}
+
+/* INICIO */
+#si .body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;}
+.mbtn{width:100%;max-width:500px;background:var(--card);border:3px solid;border-radius:16px;
+  padding:24px 20px;text-align:center;cursor:pointer;outline:none;color:var(--text);transition:all .15s;}
+.mbtn:focus,.mbtn:hover{transform:scale(1.03);box-shadow:0 0 0 4px rgba(255,215,0,.2);}
+.mbtn .ico{font-size:2.5rem;}
+.mbtn .tit{font-family:'Bebas Neue';font-size:1.8rem;letter-spacing:2px;margin-top:6px;}
+.mbtn .dsc{font-size:.78rem;color:var(--muted);margin-top:4px;}
+
+/* CURSOS */
+#sc .body{flex:1;padding:10px 18px;overflow:hidden;}
+.cgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;height:100%;}
+.cbtn{background:var(--card);border:3px solid var(--border);border-radius:12px;
+  padding:10px 8px;text-align:center;cursor:pointer;outline:none;color:var(--text);transition:all .15s;}
+.cbtn:focus,.cbtn:hover{border-color:var(--accent);background:#1a3255;box-shadow:0 0 0 3px rgba(255,215,0,.2);}
+.cnum{font-family:'Bebas Neue';font-size:2.2rem;color:var(--accent);line-height:1;}
+.cnom{font-size:.7rem;color:var(--muted);font-weight:700;margin-top:2px;}
+.csem{display:flex;gap:4px;justify-content:center;margin-top:6px;}
+.dot{width:10px;height:10px;border-radius:50%;opacity:.2;}
+.dot.on{opacity:1;box-shadow:0 0 5px currentColor;}
+.dv{background:#2ECC71;color:#2ECC71;}.da{background:var(--leve);color:var(--leve);}.dr{background:var(--rojo);color:var(--rojo);}
+.cest{font-size:.6rem;font-weight:800;margin-top:2px;}
+
+/* REGISTRO — layout principal */
+#sr .body{flex:1;display:flex;overflow:hidden;}
+
+/* Panel estudiantes (izq) */
+.ep{width:55%;display:flex;flex-direction:column;border-right:2px solid var(--border);overflow:hidden;}
+.etoolbar{display:flex;gap:8px;align-items:center;padding:8px 12px;flex-shrink:0;}
+.search{background:var(--card);border:2px solid var(--border);border-radius:8px;
+  padding:8px 14px;font-size:.9rem;color:var(--text);flex:1;font-family:'Nunito';outline:none;}
+.search:focus{border-color:var(--accent);}
+.finbtn{background:var(--green);color:#000;font-family:'Bebas Neue';font-size:.95rem;
+  letter-spacing:1px;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;outline:none;flex-shrink:0;}
+.finbtn:focus{box-shadow:0 0 0 3px rgba(46,204,113,.4);}
+.finbtn:disabled{opacity:.35;cursor:default;}
+.pbadge{background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.3);color:var(--accent);
+  font-size:.7rem;font-weight:800;padding:3px 8px;border-radius:16px;white-space:nowrap;flex-shrink:0;}
+.elist{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:4px;padding:0 10px 8px;}
+.ebtn{background:var(--card);border:2px solid var(--border);border-radius:8px;
+  padding:8px 10px;cursor:pointer;outline:none;color:var(--text);display:flex;align-items:center;gap:8px;transition:all .12s;position:relative;}
+.ebtn:focus,.ebtn.sel{border-color:var(--accent);background:#1a3255;box-shadow:0 0 0 3px rgba(255,215,0,.2);}
+.ebtn.ret{opacity:.3;border-style:dashed;}
+.enum{font-size:.62rem;color:var(--muted);min-width:28px;}
+.ename{font-size:.82rem;font-weight:800;flex:1;text-align:left;}
+.ebadges{display:flex;gap:3px;flex-wrap:wrap;}
+.bx{font-size:.56rem;font-weight:800;padding:1px 4px;border-radius:6px;}
+.bL{background:rgba(245,166,35,.2);color:var(--leve);}
+.bG{background:rgba(224,90,0,.2);color:var(--grave);}
+.bMG{background:rgba(255,68,102,.2);color:var(--rojo);}
+.bP{background:rgba(255,215,0,.2);color:var(--accent);}
+.xbtn{background:rgba(255,68,102,.12);border:1px solid rgba(255,68,102,.25);color:var(--rojo);
+  border-radius:4px;font-size:.6rem;padding:2px 5px;cursor:pointer;flex-shrink:0;}
+
+/* Panel infracciones (der) */
+.ip{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.ip-ph{flex:1;display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:.9rem;text-align:center;padding:20px;flex-direction:column;gap:8px;}
+.ip-ph .arr{font-size:2rem;opacity:.4;}
+.ilist{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:3px;padding:8px 10px;}
+.isel-hdr{background:var(--blue);padding:8px 12px;text-align:center;flex-shrink:0;border-bottom:2px solid var(--border);}
+.isel-name{font-family:'Bebas Neue';font-size:1.2rem;color:var(--accent);letter-spacing:1px;}
+.isel-curso{font-size:.68rem;color:var(--muted);}
+.isec{font-family:'Bebas Neue';font-size:.8rem;letter-spacing:2px;padding:3px 10px;
+  border-radius:6px;text-align:center;margin:3px 10px 0;}
+.isec-L{background:rgba(245,166,35,.15);color:var(--leve);}
+.isec-G{background:rgba(224,90,0,.15);color:var(--grave);}
+.isec-MG{background:rgba(255,68,102,.15);color:var(--rojo);}
+.ibtn{background:var(--card);border:2px solid var(--border);border-radius:8px;
+  padding:7px 10px;cursor:pointer;outline:none;color:var(--text);display:flex;align-items:center;gap:8px;transition:all .12s;}
+.ibtn:focus,.ibtn:hover{border-color:var(--accent);background:#1a3255;box-shadow:0 0 0 3px rgba(255,215,0,.15);}
+.ibtn:active{transform:scale(.97);}
+.icod{font-family:'Bebas Neue';font-size:1.3rem;min-width:44px;text-align:center;}
+.itxt{font-size:.76rem;font-weight:700;line-height:1.25;text-align:left;}
+.iart{font-size:.6rem;color:var(--muted);margin-top:1px;}
+
+/* FINALIZAR */
+#sf .body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:14px;overflow:hidden;}
+.fcard{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:20px 24px;max-width:660px;width:100%;}
+.ftit{font-family:'Bebas Neue';font-size:1.6rem;color:var(--accent);letter-spacing:2px;text-align:center;margin-bottom:10px;}
+.fresumen{background:rgba(0,0,0,.2);border-radius:8px;padding:8px 12px;max-height:180px;overflow-y:auto;}
+.frow{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.8rem;}
+.frow:last-child{border:none;}
+.fcod{font-family:'Bebas Neue';font-size:.9rem;}
+.dgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;max-width:800px;}
+.dbtn{background:var(--card);border:3px solid var(--border);border-radius:12px;
+  padding:12px 8px;text-align:center;cursor:pointer;outline:none;color:var(--text);transition:all .15s;}
+.dbtn:focus,.dbtn:hover{border-color:var(--accent);background:#1a3255;box-shadow:0 0 0 3px rgba(255,215,0,.2);}
+.darea{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.dname{font-size:.82rem;font-weight:800;margin-top:2px;}
+
+/* OK */
+#sok .body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
+.okicon{font-size:5rem;animation:pop .4s;}
+@keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.1)}100%{transform:scale(1)}}
+.okt{font-family:'Bebas Neue';font-size:3rem;color:var(--green);letter-spacing:4px;}
+.oks{color:var(--muted);font-size:.85rem;text-align:center;max-width:480px;}
+.okbtn{margin-top:16px;background:transparent;border:3px solid var(--green);color:var(--green);
+  font-family:'Bebas Neue';font-size:1.2rem;letter-spacing:2px;padding:12px 32px;border-radius:10px;cursor:pointer;outline:none;}
+.okbtn:focus{box-shadow:0 0 0 4px rgba(46,204,113,.3);}
+
+/* PANEL */
+#sp .body{flex:1;display:flex;flex-direction:column;padding:10px 20px;gap:8px;overflow:hidden;}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex-shrink:0;}
+.stat{background:var(--card);border:2px solid var(--border);border-radius:10px;padding:10px;text-align:center;}
+.stat .n{font-family:'Bebas Neue';font-size:2rem;line-height:1;}
+.stat .l{font-size:.64rem;color:var(--muted);font-weight:800;margin-top:2px;}
+.stT .n{color:var(--accent);}.stL .n{color:var(--leve);}.stG .n{color:var(--grave);}.stMG .n{color:var(--rojo);}
+.tw{flex:1;overflow:auto;border-radius:8px;border:2px solid var(--border);}
+table{width:100%;border-collapse:collapse;}
+th{background:var(--blue);color:var(--accent);font-size:.68rem;font-weight:800;padding:8px 10px;text-align:left;position:sticky;top:0;letter-spacing:1px;text-transform:uppercase;}
+td{padding:6px 10px;font-size:.75rem;border-bottom:1px solid rgba(42,74,112,.4);}
+tr:hover td{background:rgba(46,117,182,.07);}
+.tt{font-size:.64rem;font-weight:800;padding:2px 6px;border-radius:6px;}
+
+/* MODAL RETIRAR */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:99;}
+.ov.on{display:flex;}
+.mbox{background:var(--card);border:3px solid var(--rojo);border-radius:16px;padding:26px 30px;max-width:380px;width:90%;text-align:center;}
+.mbox h3{font-family:'Bebas Neue';font-size:1.6rem;color:var(--rojo);letter-spacing:1px;margin-bottom:8px;}
+.mbox p{color:var(--muted);font-size:.83rem;line-height:1.7;margin-bottom:16px;}
+.mbox p strong{color:var(--text);}
+.mbtns{display:flex;gap:10px;justify-content:center;}
+.mbdel{background:var(--rojo);color:#fff;font-family:'Bebas Neue';font-size:1.1rem;padding:10px 24px;border:none;border-radius:8px;cursor:pointer;}
+.mbcan{background:transparent;color:var(--muted);font-family:'Bebas Neue';font-size:1.1rem;padding:10px 24px;border:2px solid var(--border);border-radius:8px;cursor:pointer;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(110px);
+  background:var(--green);color:#000;font-family:'Bebas Neue';font-size:1.3rem;
+  letter-spacing:2px;padding:11px 28px;border-radius:12px;z-index:999;transition:transform .3s;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.err{background:var(--rojo);color:#fff;}
+.hint{position:fixed;bottom:6px;right:14px;font-size:.58rem;color:rgba(122,156,192,.3);pointer-events:none;}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  body{height:auto;overflow-y:auto;}
+  .scr{height:auto;min-height:100vh;}
+  #sr .body{flex-direction:column;}
+  .ep{width:100%;border-right:none;border-bottom:2px solid var(--border);}
+  .ip{min-height:300px;}
+  .cgrid{grid-template-columns:repeat(3,1fr);}
+  .dgrid{grid-template-columns:repeat(2,1fr);}
+  .stats{grid-template-columns:repeat(2,1fr);}
+  th:nth-child(5),td:nth-child(5),th:nth-child(6),td:nth-child(6){display:none;}
+}
+@media(max-width:480px){
+  .cgrid{grid-template-columns:repeat(3,1fr);gap:6px;}
+  .dgrid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="slogin" class="scr on">
+  <div class="hdr">
+    <div><div class="logo">&#127EB; NSP Disciplina 2026</div>
+    <div class="sub">U.E. Marista Nuestra Señora del Pilar &mdash; Fe y Alegría</div></div>
+  </div>
+  <div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:16px;">
+    <div style="font-size:3rem;">&#128274;</div>
+    <div style="color:var(--accent);font-weight:900;font-size:1.1rem;text-align:center;">ACCESO DOCENTES</div>
+    <div style="width:100%;max-width:340px;display:flex;flex-direction:column;gap:12px;">
+      <div>
+        <label style="font-size:.75rem;color:var(--muted);display:block;margin-bottom:4px;">PIN</label>
+        <input id="lg-pin" type="password" placeholder="••••" maxlength="8"
+          style="width:100%;box-sizing:border-box;padding:14px;border-radius:10px;background:#1a1a2e;color:#fff;border:1px solid #444;font-size:1.4rem;letter-spacing:.4em;text-align:center;">
+      </div>
+      <button onclick="lgIngresar()" id="lg-btn"
+        style="background:var(--accent);color:#000;border:none;border-radius:12px;padding:14px;font-weight:900;font-size:1rem;cursor:pointer;margin-top:4px;">
+        INGRESAR
+      </button>
+      <div id="lg-error" style="display:none;text-align:center;color:var(--rojo);font-size:.82rem;padding:8px;background:rgba(255,68,102,.1);border-radius:8px;"></div>
+    </div>
+    <div style="color:var(--muted);font-size:.72rem;text-align:center;margin-top:8px;">
+      Contacta a la Dirección si no tienes acceso
+    </div>
+  </div>
+</div>
+
+<!-- INICIO -->
+<div id="si" class="scr">
+  <div class="hdr">
+    <div><div class="logo">&#127EB; NSP Disciplina 2026</div>
+    <div class="sub">U.E. Marista Nuestra Señora del Pilar &mdash; Fe y Alegría</div></div>
+    <div style="text-align:right">
+      <div class="clock" id="clk0">--:--</div>
+      <div style="font-size:.68rem;color:var(--muted)" id="fch">--</div>
+      <div id="lg-nombre" style="font-size:.68rem;color:var(--accent);margin-top:2px;"></div>
+      <button onclick="lgCerrarSesion()" style="background:none;border:none;color:var(--muted);font-size:.62rem;cursor:pointer;padding:2px 0;text-decoration:underline;">salir</button>
+    </div>
+  </div>
+  <div class="body">
+    <button class="mbtn" style="border-color:var(--accent)" onclick="goto('sc')">
+      <div class="ico">&#128203;</div>
+      <div class="tit" style="color:var(--accent)">VISTA DOCENTE</div>
+      <div class="dsc">Registrar infracciones &mdash; 2 toques + confirmar docente al finalizar</div>
+    </button>
+    <button class="mbtn" style="border-color:var(--lblue)" onclick="abrirPanel()">
+      <div class="ico">&#128202;</div>
+      <div class="tit" style="color:var(--lblue)">VISTA DIRECCIÓN</div>
+      <div class="dsc">Panel con estadísticas y todos los registros</div>
+    </button>
+    <button class="mbtn" style="border-color:#4CAF50" onclick="abrirRapido()">
+      <div class="ico">&#9999;&#65039;</div>
+      <div class="tit" style="color:#4CAF50">REGISTRO RÁPIDO</div>
+      <div class="dsc">Selecciona estudiante y toca los códigos mirando la ficha física</div>
+    </button>
+  </div>
+</div>
+
+<!-- REGISTRO RÁPIDO -->
+<div id="socr" class="scr">
+  <div class="hdr">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="back" onclick="goto('si')">&#8592; INICIO</button>
+      <div class="logo" style="font-size:1.1rem;">&#9999;&#65039; REGISTRO RÁPIDO</div>
+    </div>
+    <div class="clock" id="clkocr">--:--</div>
+  </div>
+  <div class="body" style="padding:10px;gap:10px;display:flex;flex-direction:column;overflow-y:auto;">
+
+    <!-- PASO 1: ESTUDIANTE -->
+    <div style="background:var(--card);border-radius:12px;padding:12px;border:1px solid #333;">
+      <div style="color:var(--accent);font-weight:900;font-size:.9rem;margin-bottom:8px;">① ESTUDIANTE</div>
+      <div style="display:flex;gap:8px;">
+        <select id="rq-curso" onchange="rqCargarEst()" style="flex:1;padding:8px;border-radius:8px;background:#1a1a2e;color:#fff;border:1px solid #444;font-size:.82rem;">
+          <option value="">— Curso —</option>
+        </select>
+        <select id="rq-est" style="flex:2;padding:8px;border-radius:8px;background:#1a1a2e;color:#fff;border:1px solid #444;font-size:.82rem;">
+          <option value="">— Estudiante —</option>
+        </select>
+      </div>
+      <div id="rq-est-info" style="display:none;margin-top:6px;background:#0d1b2e;border-radius:8px;padding:6px 10px;font-size:.78rem;color:var(--lblue);"></div>
+    </div>
+
+    <!-- PASO 2: FECHA + DOCENTE -->
+    <div style="background:var(--card);border-radius:12px;padding:12px;border:1px solid #333;display:flex;gap:8px;align-items:center;">
+      <div style="color:var(--muted);font-size:.78rem;white-space:nowrap;">Fecha:</div>
+      <input type="date" id="rq-fecha" style="flex:1;padding:7px;border-radius:8px;background:#1a1a2e;color:#fff;border:1px solid #444;font-size:.82rem;">
+      <div style="color:var(--muted);font-size:.78rem;white-space:nowrap;">Docente:</div>
+      <select id="rq-doc" style="flex:1.5;padding:7px;border-radius:8px;background:#1a1a2e;color:#fff;border:1px solid #444;font-size:.78rem;">
+        <option value="Prof. Marcelo">Prof. Marcelo</option>
+        <option value="Comisión">Comisión</option>
+        <option value="Dirección">Dirección</option>
+      </select>
+    </div>
+
+    <!-- PASO 3: CÓDIGOS -->
+    <div style="background:var(--card);border-radius:12px;padding:12px;border:1px solid #333;">
+      <div style="color:#4CAF50;font-weight:900;font-size:.9rem;margin-bottom:10px;">② TOCAR CÓDIGOS DE LA FICHA</div>
+
+      <!-- LEVES -->
+      <div style="font-size:.72rem;color:var(--muted);font-weight:700;letter-spacing:.05em;margin-bottom:6px;">LEVES</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;" id="rq-leves"></div>
+
+      <!-- GRAVES -->
+      <div style="font-size:.72rem;color:#E05A00;font-weight:700;letter-spacing:.05em;margin-bottom:6px;">GRAVES</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;" id="rq-graves"></div>
+
+      <!-- MUY GRAVES -->
+      <div style="font-size:.72rem;color:#C0001A;font-weight:700;letter-spacing:.05em;margin-bottom:6px;">MUY GRAVES</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;" id="rq-mg"></div>
+    </div>
+
+    <!-- RESUMEN SELECCIONADOS -->
+    <div id="rq-resumen" style="display:none;background:#0d1b2e;border-radius:12px;padding:12px;border:1px solid #4CAF50;">
+      <div style="color:#4CAF50;font-weight:900;font-size:.85rem;margin-bottom:8px;">FALTAS SELECCIONADAS</div>
+      <div id="rq-lista" style="display:flex;flex-direction:column;gap:5px;max-height:160px;overflow-y:auto;"></div>
+    </div>
+
+    <!-- GUARDAR -->
+    <button id="rq-btn-guardar" onclick="rqGuardar()" disabled
+      style="background:#4CAF50;color:#fff;border:none;border-radius:12px;padding:14px;font-weight:900;font-size:1rem;cursor:pointer;opacity:.4;">
+      ✅ GUARDAR FALTAS
+    </button>
+
+    <!-- LIMPIAR -->
+    <button onclick="rqLimpiar()" style="background:transparent;color:var(--muted);border:1px solid #333;border-radius:12px;padding:10px;font-size:.82rem;cursor:pointer;">
+      🗑 Limpiar selección
+    </button>
+
+    <div id="rq-estado" style="text-align:center;color:var(--muted);font-size:.78rem;min-height:18px;"></div>
+  </div>
+</div>
+
+<!-- CURSOS -->
+<div id="sc" class="scr">
+  <div class="hdr">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="back" onclick="goto('si')">&#8592; INICIO</button>
+      <div class="logo" style="font-size:1.3rem;">SELECCIONA EL CURSO</div>
+    </div>
+    <div class="clock" id="clk1">--:--</div>
+  </div>
+  <div class="body"><div class="cgrid" id="cgrid"></div></div>
+</div>
+
+<!-- REGISTRO -->
+<div id="sr" class="scr">
+  <div class="hdr">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="back" onclick="goto('sc')">&#8592; CURSOS</button>
+      <div class="curso-lbl" id="sr-titulo">Curso</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div id="pend-badge" class="pbadge" style="display:none">&#9203; 0</div>
+      <button class="finbtn" id="finbtn" disabled onclick="mostrarFin()">&#10003; FINALIZAR</button>
+      <div class="clock" id="clk2">--:--</div>
+    </div>
+  </div>
+  <div class="body">
+    <!-- Estudiantes -->
+    <div class="ep">
+      <div class="etoolbar">
+        <input type="text" class="search" id="buscar" placeholder="&#128269; Buscar..." oninput="filtrar(this.value)">
+      </div>
+      <div class="elist" id="elist"></div>
+    </div>
+    <!-- Infracciones -->
+    <div class="ip" id="ipanel">
+      <div class="ip-ph" id="iph">
+        <div class="arr">&#128072;</div>
+        <div>Selecciona un estudiante</div>
+      </div>
+      <div id="isel" style="display:none;flex-direction:column;overflow:hidden;flex:1;">
+        <div class="isel-hdr">
+          <div class="isel-name" id="isel-name">—</div>
+          <div class="isel-curso" id="isel-curso">—</div>
+        </div>
+        <div class="ilist" id="ilist"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FINALIZAR -->
+<div id="sf" class="scr">
+  <div class="hdr">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="back" onclick="goto('sr')">&#8592; VOLVER</button>
+      <div class="logo">&#10003; FINALIZAR CLASE</div>
+    </div>
+    <div class="clock" id="clk3">--:--</div>
+  </div>
+  <div class="body">
+    <div class="fcard">
+      <div class="ftit">REGISTROS DE ESTA CLASE</div>
+      <div class="fresumen" id="fresumen"></div>
+    </div>
+    <div style="font-family:'Bebas Neue';font-size:.95rem;color:var(--muted);letter-spacing:2px;text-align:center;">
+      &#128100; TOCA TU NOMBRE PARA ENVIAR
+    </div>
+    <div class="dgrid" id="dgrid"></div>
+  </div>
+</div>
+
+<!-- OK -->
+<div id="sok" class="scr">
+  <div class="hdr"><div class="logo">NSP Disciplina 2026</div></div>
+  <div class="body">
+    <div class="okicon">&#10003;</div>
+    <div class="okt">&#161;ENVIADO!</div>
+    <div class="oks" id="oks">Registros guardados</div>
+    <button class="okbtn" onclick="goto('sc')">+ NUEVA CLASE</button>
+  </div>
+</div>
+
+<!-- PANEL -->
+<div id="sp" class="scr">
+  <div class="hdr">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="back" onclick="goto('si')">&#8592; INICIO</button>
+      <div class="logo">&#128202; PANEL DIRECCIÓN</div>
+    </div>
+    <button class="back" onclick="cargarPanel()" style="border-color:var(--accent);color:var(--accent);">&#128260; ACTUALIZAR</button>
+  </div>
+  <div class="body">
+    <div class="stats">
+      <div class="stat stT"><div class="n" id="pt">0</div><div class="l">TOTAL</div></div>
+      <div class="stat stL"><div class="n" id="pl">0</div><div class="l">LEVES</div></div>
+      <div class="stat stG"><div class="n" id="pg">0</div><div class="l">GRAVES</div></div>
+      <div class="stat stMG"><div class="n" id="pm">0</div><div class="l">MUY GRAVES</div></div>
+    </div>
+    <div class="tw">
+      <table><thead><tr>
+        <th>Fecha</th><th>Curso</th><th>Estudiante</th><th>Tipo</th><th>Infracción</th><th>Docente</th><th>&#128465;</th>
+      </tr></thead><tbody id="ptbody"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RETIRAR -->
+<div class="ov" id="mov">
+  <div class="mbox">
+    <h3 id="mtit">RETIRAR</h3>
+    <p>&#191;Confirmas la acción para<br><strong id="mnombre"></strong>?</p>
+    <div class="mbtns">
+      <button class="mbdel" onclick="confirmarRet()">CONFIRMAR</button>
+      <button class="mbcan" onclick="document.getElementById('mov').classList.remove('on')">CANCELAR</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="hint">&#8593;&#8595; Navegar &nbsp;&#9646; OK &nbsp;&#8592; Volver</div>
+
+<script>
+const SU='https://script.google.com/macros/s/AKfycbzo48ywWcrAdt0OzGYlHQV9UX1_Osorw_Fu6-fE-Thm4miXmlQTumHdijuD7qxqFdZA/exec';
+const CURSOS=[{id:'2A',n:'2do "A"'},{id:'2B',n:'2do "B"'},{id:'2C',n:'2do "C"'},{id:'3A',n:'3ro "A"'},{id:'3B',n:'3ro "B"'},{id:'3C',n:'3ro "C"'},{id:'4A',n:'4to "A"'},{id:'4B',n:'4to "B"'},{id:'4C',n:'4to "C"'},{id:'5A',n:'5to "A"'},{id:'5B',n:'5to "B"'},{id:'5C',n:'5to "C"'},{id:'6A',n:'6to "A"'},{id:'6B',n:'6to "B"'},{id:'6C',n:'6to "C"'}];
+const DOCS=[{a:'Música',n:'Prof. Marcelo'},{a:'Biología',n:'Prof. Beatriz'},{a:'Biología',n:'Prof. Mónica'},{a:'Biología',n:'Prof. Leydi'},{a:'Física',n:'Prof. Victor Quiroz'},{a:'Química',n:'Prof. Victor Paricagua'},{a:'Lenguaje',n:'Prof. Anai'},{a:'Lenguaje',n:'Prof. Liliana B.'},{a:'Inglés',n:'Prof. Jhannet'},{a:'Cs. Sociales',n:'Prof. Ronald'},{a:'Cs. Sociales',n:'Prof. Mirian Aguilar'},{a:'Cs. Sociales',n:'Prof. Mirian Orellana'},{a:'Cs. Sociales',n:'Prof. Mirian Taquichiri'},{a:'Ed. Física',n:'Prof. Victor Quispe'},{a:'Ed. Física',n:'Prof. Isaac Jiménez'},{a:'Artes',n:'Prof. Magali'},{a:'Artes',n:'Prof. Valentina Colque'},{a:'Psicología',n:'Prof. Aida Arauco'},{a:'Filosofía',n:'Prof. Dubeysa Arévalo'},{a:'Valores',n:'Prof. Victor Mamani'},{a:'Valores',n:'Prof. Roxana Araoz'},{a:'Matemáticas',n:'Prof. Eddy Osinaga'},{a:'Matemáticas',n:'Prof. Juan Aguilar'},{a:'Matemáticas',n:'Prof. Jorge C.'},{a:'Matemáticas',n:'Prof. Lourdes Gutiérrez'},{a:'Matemáticas',n:'Prof. Roy'},{a:'Música',n:'Prof. Olga Chambi'},{a:'Tecnología',n:'Prof. Silvio Pacheco'},{a:'Comunicación',n:'Prof. Rosemary'}];
+const INF={L:[{c:'L-1',t:'Llegada tarde',a:'19.3'},{c:'L-2',t:'No porta Agenda Escolar',a:'19.1'},{c:'L-3',t:'Uniforme / tintes / maquillaje',a:'19.5'},{c:'L-4',t:'No entrega tareas',a:'19.4'},{c:'L-5',t:'Distrae o actividades ajenas',a:'19.6'},{c:'L-6',t:'Sin material escolar',a:'19.7'}],G:[{c:'G-1',t:'Celular o dispositivo en clase',a:'12.21'},{c:'G-2',t:'Copia / plagio digital',a:'20.2'},{c:'G-3',t:'Abandona la U.E.',a:'20.10'},{c:'G-4',t:'Insultos / lenguaje soez',a:'20.20'},{c:'G-5',t:'Daño a instalaciones',a:'20.11'},{c:'G-6',t:'Falsifica firmas / notas',a:'20.17'},{c:'G-7',t:'Burlas / apodos / humillación',a:'20.6'},{c:'G-8',t:'Oculta boletín de disciplina',a:'20.12'}],MG:[{c:'MG-1',t:'Peleas físicas',a:'21.1'},{c:'MG-2',t:'Alcohol o drogas',a:'21.3a'},{c:'MG-3',t:'Armas u objetos peligrosos',a:'21.3b'},{c:'MG-4',t:'Acoso / amenazas',a:'21.5'},{c:'MG-5',t:'Hurto',a:'21.4'},{c:'MG-6',t:'Discriminación',a:'21.10'}]};
+const ED={"2A": [{"id": "2A-1", "nombre": "ALBARES MENDOZA, ALEXIS", "num": 1}, {"id": "2A-2", "nombre": "CABALLERO RAMALLO, MAITE NATALY", "num": 2}, {"id": "2A-3", "nombre": "CALDERON GARCIA, WILLIAM ANDREY", "num": 3}, {"id": "2A-4", "nombre": "CALLE CRUZ, NICOLAS ARIEL", "num": 4}, {"id": "2A-5", "nombre": "CALLER IBAGUARI, EDITH", "num": 5}, {"id": "2A-6", "nombre": "CARRILLO MEJIA, ITZEL ALEJANDRA", "num": 6}, {"id": "2A-7", "nombre": "CASTRO PEÑAFIEL, NICOL JHAMILETH", "num": 7}, {"id": "2A-8", "nombre": "CHOCONI VENTURA, NEYMAR JACOB", "num": 8}, {"id": "2A-9", "nombre": "CLAROS CARI, NICOLAS JHAZIEL", "num": 9}, {"id": "2A-10", "nombre": "CLAROS MAMANI, SOFIA INES", "num": 10}, {"id": "2A-11", "nombre": "COPA MAMANI, THIAGO", "num": 11}, {"id": "2A-12", "nombre": "DELGADILLO COLQUE, RYAN NEYMAR", "num": 12}, {"id": "2A-13", "nombre": "GONZALES CHAMBI, NICOLAS DANIEL", "num": 13}, {"id": "2A-14", "nombre": "HUANCA MAMANI, TREYSI JHUDITH", "num": 14}, {"id": "2A-15", "nombre": "JAILLITA QUISPE, BRYAN GADIEL", "num": 15}, {"id": "2A-16", "nombre": "LLAMPA FERNANDEZ, ELIOTH GAEL", "num": 16}, {"id": "2A-17", "nombre": "MAMANI ZUÑIGA, FERNANDA", "num": 17}, {"id": "2A-18", "nombre": "ORTUSTE ORELLANA, LUCIANA AVRIL", "num": 18}, {"id": "2A-19", "nombre": "PAREDES QUISBERT, ALEXIA CONSTANZA", "num": 19}, {"id": "2A-20", "nombre": "PARRA GARRON, ALBA MADELEN", "num": 20}, {"id": "2A-21", "nombre": "PARRADO BUSTAMANTE, SANTIAGO", "num": 21}, {"id": "2A-22", "nombre": "PEREYRA HOSSE, GHI JOSE", "num": 22}, {"id": "2A-23", "nombre": "PINTO ROJAS, ANDRES MATEO", "num": 23}, {"id": "2A-24", "nombre": "PRADA POMA, ABIGAIL", "num": 24}, {"id": "2A-25", "nombre": "PUÑA VALENCIA, ANTONIO GABRIEL", "num": 25}, {"id": "2A-26", "nombre": "QUISPE MARIÑO, JHACK MILAN", "num": 26}, {"id": "2A-27", "nombre": "RIERA GOYTIA, MEGAN FERNANDA", "num": 27}, {"id": "2A-28", "nombre": "ROJAS BUSTAMANTE, CAMILA", "num": 28}, {"id": "2A-29", "nombre": "ROMERO CANEDO, LEANDRO ALEJANDRO", "num": 29}, {"id": "2A-30", "nombre": "ROMERO RAMOS, LUIS ADRIAN", "num": 30}, {"id": "2A-31", "nombre": "ROMERO SALAZAR, SAUL JHEREMY", "num": 31}, {"id": "2A-32", "nombre": "VEIZAGA SOLIS, AINHOA VICTORIA", "num": 32}], "2B": [{"id": "2B-1", "nombre": "AGNE CUIZA, ADRIAN MAURICIO", "num": 1}, {"id": "2B-2", "nombre": "AGUILAR MORALES, SARA BELEN", "num": 2}, {"id": "2B-3", "nombre": "ALBA ALVESTEGUI, JHOANA IVETTE", "num": 3}, {"id": "2B-4", "nombre": "ARAMAYO CHINCHILLA, SANTIAGO", "num": 4}, {"id": "2B-5", "nombre": "ARGANA SOLIZ, LUCAS ANGEL", "num": 5}, {"id": "2B-6", "nombre": "AYALA CRESPO, SANTIAGO AARON", "num": 6}, {"id": "2B-7", "nombre": "CASTELLON MAMANI, TAMAYA", "num": 7}, {"id": "2B-8", "nombre": "CLAURE GARCIA, WANNER", "num": 8}, {"id": "2B-9", "nombre": "CLEMENTE MARTINES, JHOSELYN MAYDA", "num": 9}, {"id": "2B-10", "nombre": "CONTRERAS GONZALES, IAN", "num": 10}, {"id": "2B-11", "nombre": "DURAN COLQUE, JOSE MIGUEL", "num": 11}, {"id": "2B-12", "nombre": "FERNANDEZ FLORES, DANIEL JOSE", "num": 12}, {"id": "2B-13", "nombre": "GONZALES CORIA, EMILY ARIANA", "num": 13}, {"id": "2B-14", "nombre": "GUTIERREZ ALEGRE, FAVIO ANDRE", "num": 14}, {"id": "2B-15", "nombre": "GUTIERREZ GONZALO, LIZ NICOL", "num": 15}, {"id": "2B-16", "nombre": "LAZARTE CAMACHO, JHON EDWAR", "num": 16}, {"id": "2B-17", "nombre": "LOAIZA VELASCO, JHOJAN FABIOI", "num": 17}, {"id": "2B-18", "nombre": "LOPEZ ARISPE, DANIEL", "num": 18}, {"id": "2B-19", "nombre": "MAMANI SEJAS, TATIANA BRITANI", "num": 19}, {"id": "2B-20", "nombre": "MERILES TOLA, MICHELLE AMAYA", "num": 20}, {"id": "2B-21", "nombre": "MIRANDA PONCE, FERNANDO  CALEB", "num": 21}, {"id": "2B-22", "nombre": "PACHECO VELASCO, ALEX ANTONI", "num": 22}, {"id": "2B-23", "nombre": "PEREIRA LOZA, JOSE ANTONIO", "num": 23}, {"id": "2B-24", "nombre": "POZO ROJAS, JUAN DAVID", "num": 24}, {"id": "2B-25", "nombre": "RAMIREZ CASTRO, SKAYLOR TIFANNY", "num": 25}, {"id": "2B-26", "nombre": "RAMIREZ QUISBERT, MIKEYLA", "num": 26}, {"id": "2B-27", "nombre": "RICALDEZ SANDOVAL, BRISSA SELENE", "num": 27}, {"id": "2B-28", "nombre": "SILES QUISPE, CAMILA NAOMI", "num": 28}, {"id": "2B-29", "nombre": "TORRICO CRESPO, SEBASTIAN", "num": 29}, {"id": "2B-30", "nombre": "VARGAS QUINTANA, SWAMI IAN", "num": 30}, {"id": "2B-31", "nombre": "VILLARROEL CAMAQUE, THAIS", "num": 31}, {"id": "2B-32", "nombre": "ZURITA FERRUFINO, JOSE MARVIN", "num": 32}], "2C": [{"id": "2C-1", "nombre": "GASPAR, SAMUEL", "num": 1}, {"id": "2C-2", "nombre": "ALBAN MONZON, GERALDINE MADYSON", "num": 2}, {"id": "2C-3", "nombre": "ALBARES ZURITA, RODRIGO", "num": 3}, {"id": "2C-4", "nombre": "CHALLA MENDOZA, ADRIANA NICOL", "num": 4}, {"id": "2C-5", "nombre": "CONDORI BERBETTY, JAZMIN SARAI", "num": 5}, {"id": "2C-6", "nombre": "CUBA OLMEDO, ALEXIS LEONARDO", "num": 6}, {"id": "2C-7", "nombre": "CUSI VEISAGA, JOSUE ISAIAS", "num": 7}, {"id": "2C-8", "nombre": "EQUISE CORDOVA, HAROLD LUIS", "num": 8}, {"id": "2C-9", "nombre": "FERNANDEZ MARPARTIDA, PABLO MAXIMILIANO", "num": 9}, {"id": "2C-10", "nombre": "FLORES ALANES, DIEGO DAVID", "num": 10}, {"id": "2C-11", "nombre": "FLORES PACO, SNAYDER", "num": 11}, {"id": "2C-12", "nombre": "FRANCO VEGA, THIAGO RAFAEL", "num": 12}, {"id": "2C-13", "nombre": "GUARACHI FERNANDEZ, HAZIEL JOEL", "num": 13}, {"id": "2C-14", "nombre": "GUTIERREZ CANAVIRI, AMILKAR MATEO", "num": 14}, {"id": "2C-15", "nombre": "LUIZAGA AVILA, BENJAMIN RAMIRO", "num": 15}, {"id": "2C-16", "nombre": "MAMANI MORALES, FABIOLA", "num": 16}, {"id": "2C-17", "nombre": "MAMANI SILVA, DOUGLAS ADAN", "num": 17}, {"id": "2C-18", "nombre": "MEJIA VALENCIA, BENJAMIN", "num": 18}, {"id": "2C-19", "nombre": "PACARI MAMANI, ANDRE GILMAR", "num": 19}, {"id": "2C-20", "nombre": "QUISPE CONDORI, LIOMA LIBERTAD", "num": 20}, {"id": "2C-21", "nombre": "QUISPE MARIÑO, NYCK DYLAN", "num": 21}, {"id": "2C-22", "nombre": "RAMIREZ ARZE, NATANAEL", "num": 22}, {"id": "2C-23", "nombre": "RICALDEZ PAREDES, JHAKELIN ANDREA", "num": 23}, {"id": "2C-24", "nombre": "RODRIGUEZ GUTIERREZ, SAMUEL ERICK", "num": 24}, {"id": "2C-25", "nombre": "ROMERO FLORES, JUAN MIGUEL", "num": 25}, {"id": "2C-26", "nombre": "SANCHEZ MARZANA, SHEYLA BRITANI", "num": 26}, {"id": "2C-27", "nombre": "SOLIZ YAVE, ERIKA", "num": 27}, {"id": "2C-28", "nombre": "TICONA SURUMI, FERNANDA", "num": 28}, {"id": "2C-29", "nombre": "TORDOYA QUIROGA, KARIM FRANCESC", "num": 29}, {"id": "2C-30", "nombre": "URIBE VILLANUEVA, ENRIQUE MTIAS", "num": 30}, {"id": "2C-31", "nombre": "YUCRA TICONA, ZARLET BELEN", "num": 31}], "3A": [{"id": "3A-1", "nombre": "ALBARES ZURITA, JUAN DIEGO", "num": 1}, {"id": "3A-2", "nombre": "CAERO DELGADO, MATIAS DIEGO", "num": 2}, {"id": "3A-3", "nombre": "CESPEDES GUARENA, JOSE CARLO", "num": 3}, {"id": "3A-4", "nombre": "CHILE ALVAREZ, DYLAN", "num": 4}, {"id": "3A-5", "nombre": "CHOQUE GALVEZ, JIMENA ELIANA", "num": 5}, {"id": "3A-6", "nombre": "CLAURE ARANIBAR, MAYARA JHASMIN", "num": 6}, {"id": "3A-7", "nombre": "COCA LOZA, KEATHON LEANDRO", "num": 7}, {"id": "3A-8", "nombre": "CONDORI CEPEDA, AARON ALEXANDER", "num": 8}, {"id": "3A-9", "nombre": "CORIA JIMENEZ, ROSARIO ESMERALDA", "num": 9}, {"id": "3A-10", "nombre": "DELGADILLO COLQUE, ADEMAR SAMIR", "num": 10}, {"id": "3A-11", "nombre": "FERNANDEZ FLORES, MATIAS CARLOS ANDRES", "num": 11}, {"id": "3A-12", "nombre": "GONZALES TORRICO, JHOSELIN DANNA", "num": 12}, {"id": "3A-13", "nombre": "JAMES MAREÑO, SEBASTIAN", "num": 13}, {"id": "3A-14", "nombre": "LEDEZMA MIRANDA, ARABEL DAGMAR", "num": 14}, {"id": "3A-15", "nombre": "LIMACHI CANAVIRI, JACI ISABEL", "num": 15}, {"id": "3A-16", "nombre": "LUNA ARIAS, SAMUEL", "num": 16}, {"id": "3A-17", "nombre": "MAMANI SOLIZ, DEYMAR JONAS", "num": 17}, {"id": "3A-18", "nombre": "MELENDRES MONTAÑO, ANGELA ISABEL", "num": 18}, {"id": "3A-19", "nombre": "MORALES TABOADA, SELENA KATHERIN", "num": 19}, {"id": "3A-20", "nombre": "PADILLA ROJAS, MIKEYLA KIMBERLY", "num": 20}, {"id": "3A-21", "nombre": "PATIÑO CHAVEZ, DIEGO ANTONIO", "num": 21}, {"id": "3A-22", "nombre": "PATIñO COSSIO, VALENTINA", "num": 22}, {"id": "3A-23", "nombre": "PEREYRA HOSSE, JUAN SANTIAGO", "num": 23}, {"id": "3A-24", "nombre": "POMA VILLARPANDO, JAIR", "num": 24}, {"id": "3A-25", "nombre": "POQUECHOQUE HUAYTARI, ANDRE YIHAD", "num": 25}, {"id": "3A-26", "nombre": "RAMIREZ CLAURE, LESLIE ROXANA", "num": 26}, {"id": "3A-27", "nombre": "RIVERO ACERO, EDGAR ALAN", "num": 27}, {"id": "3A-28", "nombre": "RODRIGUEZ MAMANI, KEVIN", "num": 28}, {"id": "3A-29", "nombre": "ROJAS BUSTAMANTE, ROSARIO", "num": 29}, {"id": "3A-30", "nombre": "ROMERO RAMOS, MELISA", "num": 30}, {"id": "3A-31", "nombre": "ROMERO TABORGA, ALAN LUIS", "num": 31}, {"id": "3A-32", "nombre": "RUEDA RODRIGUEZ, LILIAN NATHALI", "num": 32}, {"id": "3A-33", "nombre": "UGARTE CHOQUE, JESSICA", "num": 33}, {"id": "3A-34", "nombre": "VALDA ALVAREZ, JOSE RAMIRO", "num": 34}, {"id": "3A-35", "nombre": "VILLCA BERNABEL, EVER ALEXANDER", "num": 35}], "3B": [{"id": "3B-1", "nombre": "CANAVIRI, ANGEL LEONARDO", "num": 1}, {"id": "3B-2", "nombre": "AGUILAR COLQUE, LUZ MARIANA", "num": 2}, {"id": "3B-3", "nombre": "AGUILAR MOYA, CAMILA NICOL", "num": 3}, {"id": "3B-4", "nombre": "ALMANZA HUANCA, EMERSON", "num": 4}, {"id": "3B-5", "nombre": "ANDIA APAZA, JHEREMY DILAN", "num": 5}, {"id": "3B-6", "nombre": "AYALA CRESPO, ANDRES IVAN", "num": 6}, {"id": "3B-7", "nombre": "BARROSO ROMERO, LUCAS", "num": 7}, {"id": "3B-8", "nombre": "CAMACHO MAMANI, ANGIE KATLIN", "num": 8}, {"id": "3B-9", "nombre": "CANAVIRI VARGAS, SHARON MELANY", "num": 9}, {"id": "3B-10", "nombre": "CARBALLO BUSTAMANTE, JHOSELYN BELEN", "num": 10}, {"id": "3B-11", "nombre": "CHOQUE TITO, NEYMAR CRISTIAN", "num": 11}, {"id": "3B-12", "nombre": "FRANCO VEGA, ALEXANDRA NIEVES", "num": 12}, {"id": "3B-13", "nombre": "GARCIA GOMEZ, DILAN NEIMAR", "num": 13}, {"id": "3B-14", "nombre": "GONZALES ESTRADA, IVANA MADAI", "num": 14}, {"id": "3B-15", "nombre": "GUZMAN ZEPITA, ANDRUW", "num": 15}, {"id": "3B-16", "nombre": "HERBAS ATAHUICHI, ERICK OLIVER", "num": 16}, {"id": "3B-17", "nombre": "HERRERA VIDAURRE, ROBERTO", "num": 17}, {"id": "3B-18", "nombre": "ICHUTA FERNANDEZ, REINER JOSE", "num": 18}, {"id": "3B-19", "nombre": "LIZARAZU MAMANI, ULISES SAMUEL", "num": 19}, {"id": "3B-20", "nombre": "LOPEZ MAMANI, DIANA", "num": 20}, {"id": "3B-21", "nombre": "LUIZAGA VEGA, LEONARDO SEBASTIAN", "num": 21}, {"id": "3B-22", "nombre": "MAMANI SILVA, BRISA INDIRA", "num": 22}, {"id": "3B-23", "nombre": "MENDOZA PIZAYA, ABDIAZ SAMUEL", "num": 23}, {"id": "3B-24", "nombre": "MENDOZA CONDORI, PAOLA", "num": 24}, {"id": "3B-25", "nombre": "PADILLA MARCA, JHENIFER FERNANDA", "num": 25}, {"id": "3B-26", "nombre": "PEREZ BARRIENTOS, ELIAS", "num": 26}, {"id": "3B-27", "nombre": "RAMOS CEPEDA, IAN CRISTOPHER", "num": 27}, {"id": "3B-28", "nombre": "REYNOSO HERBAS, CAMILA", "num": 28}, {"id": "3B-29", "nombre": "RIERA GOYTIA, BRIZEIDA VERA", "num": 29}, {"id": "3B-30", "nombre": "SALINAS CHARUPA, IVONNE YOMARA", "num": 30}, {"id": "3B-31", "nombre": "SOLIZ QUIROGA, MATEO LEONEL", "num": 31}, {"id": "3B-32", "nombre": "VARGAS VASQUEZ, ANDREA NATALIA", "num": 32}, {"id": "3B-33", "nombre": "VEIZAGA GUZMAN, KENDRICK JHADYEL", "num": 33}, {"id": "3B-34", "nombre": "VELA RIVERA, BRIHANA BRENDA", "num": 34}, {"id": "3B-35", "nombre": "YAVE ROLLANO, CHARLE FELIX", "num": 35}], "3C": [{"id": "3C-1", "nombre": "ANGULO MAMANI, JHON ELMER", "num": 1}, {"id": "3C-2", "nombre": "ANGULO CEREZO, DAILIN ARELI", "num": 2}, {"id": "3C-3", "nombre": "ARAUCO SARDAN, DARLIN MELODY", "num": 3}, {"id": "3C-4", "nombre": "BARRENECHEA SALAZAR, LUIS FABRICIO", "num": 4}, {"id": "3C-5", "nombre": "CANAVIRI ASTETE, NICOLAS", "num": 5}, {"id": "3C-6", "nombre": "CESPEDES OLIVERA, LISANDRO ANDRE", "num": 6}, {"id": "3C-7", "nombre": "CHAVEZ CONDORI, AYELEN ALWA", "num": 7}, {"id": "3C-8", "nombre": "CHOQUE CABRERA, VICTOR", "num": 8}, {"id": "3C-9", "nombre": "CHOQUE CONDORI, ALISON MASSIEL", "num": 9}, {"id": "3C-10", "nombre": "CHOQUE GUTIERREZ, XIOMARA RUBI", "num": 10}, {"id": "3C-11", "nombre": "CORPUS HIDALGO, ALEJANDRA", "num": 11}, {"id": "3C-12", "nombre": "GALLARDO MENDOZA, CAMILA CARLA", "num": 12}, {"id": "3C-13", "nombre": "HERBAS POMA, DARLIN", "num": 13}, {"id": "3C-14", "nombre": "JALDIN VILLARROEL, EIDEN VLADIMIR", "num": 14}, {"id": "3C-15", "nombre": "MAMANI REYES, DARLIN GISEL", "num": 15}, {"id": "3C-16", "nombre": "MARCE YAVE, CARLA", "num": 16}, {"id": "3C-17", "nombre": "MORALES CARICARI, SARAHI BRENELY", "num": 17}, {"id": "3C-18", "nombre": "MORALES FLORES, RAFAEL AARON", "num": 18}, {"id": "3C-19", "nombre": "ORELLANA SANTILLAN, VALERIA FERNANDA", "num": 19}, {"id": "3C-20", "nombre": "PAREDES COSSIO, ALEJANDRO GABRIEL", "num": 20}, {"id": "3C-21", "nombre": "PEREDO ORIHUELA, ANDREA HEYDI", "num": 21}, {"id": "3C-22", "nombre": "POQUECHOQUE HUAYTARI, ANDERSON YAZID", "num": 22}, {"id": "3C-23", "nombre": "QUIROGA SEJAS, MARCO AUGUSTO", "num": 23}, {"id": "3C-24", "nombre": "RAMOS FIQUE, ALEX", "num": 24}, {"id": "3C-25", "nombre": "SANCHEZ ROMERO, ANAHI BRENDA", "num": 25}, {"id": "3C-26", "nombre": "SILES QUISPE, MATEO EDUARDO", "num": 26}, {"id": "3C-27", "nombre": "SOLIZ QUIROGA, SAI SARETH", "num": 27}, {"id": "3C-28", "nombre": "SOSA PINTO, ALEJANDRO", "num": 28}, {"id": "3C-29", "nombre": "TOROYA YAVE, NEYMAR", "num": 29}, {"id": "3C-30", "nombre": "VASQUEZ SANCHEZ, AXCEL ADRIAN", "num": 30}, {"id": "3C-31", "nombre": "VELARDE FERNANDEZ, MIGUELANGEL", "num": 31}, {"id": "3C-32", "nombre": "ZULETA LOPEZ, LUCIANA EMILY", "num": 32}], "4A": [{"id": "4A-1", "nombre": "PEREZ, FATIMA ODALIZ", "num": 1}, {"id": "4A-2", "nombre": "ALIENDRE CONDORI, JOSE CARLOS", "num": 2}, {"id": "4A-3", "nombre": "ALMANZA HUANCA, ADRIELY", "num": 3}, {"id": "4A-4", "nombre": "CASA MAMANI, YAMILE", "num": 4}, {"id": "4A-5", "nombre": "CHAMBI PACHECO, TATIANA", "num": 5}, {"id": "4A-6", "nombre": "CHOQUE CRUZ, RIHANNA JANKARLA", "num": 6}, {"id": "4A-7", "nombre": "CHUMBE GERONIMO, DANIELA", "num": 7}, {"id": "4A-8", "nombre": "CLAROS FERNANDEZ, BRIGITH ESTEFANY", "num": 8}, {"id": "4A-9", "nombre": "CONDORI FERNANDEZ, ADALID DIEGO", "num": 9}, {"id": "4A-10", "nombre": "CUTIPA TITO, DAYSI", "num": 10}, {"id": "4A-11", "nombre": "GUTIERREZ CANAVIRI, ANA GABRIELA", "num": 11}, {"id": "4A-12", "nombre": "MAIRE ALVARES, ALEJANDRA LUCERO", "num": 12}, {"id": "4A-13", "nombre": "MAREÑO SOSA, ALEXIS MANUEL", "num": 13}, {"id": "4A-14", "nombre": "PACHECO VELASCO, NAYELI HELEN", "num": 14}, {"id": "4A-15", "nombre": "PARRA GARRON, JHONNY ALEJANDRO", "num": 15}, {"id": "4A-16", "nombre": "QUISPE AGUILAR, ANAHI MELANI", "num": 16}, {"id": "4A-17", "nombre": "RIOS MORALES, BELINDA", "num": 17}, {"id": "4A-18", "nombre": "RIVERO ACERO, JADE JASMIN", "num": 18}, {"id": "4A-19", "nombre": "ROCHA VERGARA, MELANY ROSSE", "num": 19}, {"id": "4A-20", "nombre": "SOLIZ PEDRAZAS, MAIC ARMANDO", "num": 20}, {"id": "4A-21", "nombre": "SOTO TAQUICHIRI, EDWARD ANDERSON", "num": 21}, {"id": "4A-22", "nombre": "TABOADA POMA, FABIAN", "num": 22}, {"id": "4A-23", "nombre": "TORIBIO TERAN, MATIAS CRISTIAN", "num": 23}, {"id": "4A-24", "nombre": "VELA MARAZA, FATIMA ABRIL", "num": 24}, {"id": "4A-25", "nombre": "VELARDE MONTEMAYOR, MATIAS GARET", "num": 25}, {"id": "4A-26", "nombre": "YUPANQUI RAMOS, EMILY ARACELI", "num": 26}, {"id": "4A-27", "nombre": "ZENTENO ALANEZ, ADHEMAR DYLAN", "num": 27}], "4B": [{"id": "4B-1", "nombre": "AMONZABEL FLORES, CAMILA ESTEFANI", "num": 1}, {"id": "4B-2", "nombre": "ARISPE AGUILAR, HELEN", "num": 2}, {"id": "4B-3", "nombre": "BARRIENTOS MAMANI, BRISA BETSABE", "num": 3}, {"id": "4B-4", "nombre": "BOJORGES CARVAJAL, NATALY ZALETH", "num": 4}, {"id": "4B-5", "nombre": "CABALLERO RAMALLO, MATEO ALEJANDRO", "num": 5}, {"id": "4B-6", "nombre": "CABRERA LAGUNA, FERNANDA ALEJANDRA", "num": 6}, {"id": "4B-7", "nombre": "CHOQUE GALVEZ, ABIEL", "num": 7}, {"id": "4B-8", "nombre": "CONDORI SILES, SAMIEL ANTONY", "num": 8}, {"id": "4B-9", "nombre": "GARCIA CUARASI, JHON JAIRO", "num": 9}, {"id": "4B-10", "nombre": "GARCIA VILLEGAS, SINDEL DESIREE", "num": 10}, {"id": "4B-11", "nombre": "GERONIMO PEREZ, KARIM ANTHONY", "num": 11}, {"id": "4B-12", "nombre": "GONZALES ROCHA, RUTH ADELAIDA", "num": 12}, {"id": "4B-13", "nombre": "JAILLITA REVOLLO, LIMBERT", "num": 13}, {"id": "4B-14", "nombre": "JIMENEZ BERRIOS, JHOJAM LEANDRO", "num": 14}, {"id": "4B-15", "nombre": "LIMACHI CANAVIRI, BRUCE BRYAN", "num": 15}, {"id": "4B-16", "nombre": "LIZARAZU MAMANI, ARIANA PILAR", "num": 16}, {"id": "4B-17", "nombre": "LORA ACERO, CARLOS ALFREDO", "num": 17}, {"id": "4B-18", "nombre": "MARZA AGUILAR, ANTHONY JOSE", "num": 18}, {"id": "4B-19", "nombre": "PARRADO BUSTAMANTE, MARIANA", "num": 19}, {"id": "4B-20", "nombre": "PINTO ROJAS, NICOLAS MATIAS", "num": 20}, {"id": "4B-21", "nombre": "RAMIREZ ALANIZ, GABRIEL", "num": 21}, {"id": "4B-22", "nombre": "SAJAMA PACO, RUTH MAYA", "num": 22}, {"id": "4B-23", "nombre": "TERRAZAS CAPRILES, ANEL CECILIA", "num": 23}, {"id": "4B-24", "nombre": "UGARTE VIDAURRE, LEONARDO", "num": 24}, {"id": "4B-25", "nombre": "VARGAS JORA, SOFIA", "num": 25}, {"id": "4B-26", "nombre": "VASQUEZ CUBA, KATERINE JADE", "num": 26}, {"id": "4B-27", "nombre": "VILLAMOR LORAS, ALISSON FABIANA", "num": 27}, {"id": "4B-28", "nombre": "ZULETA ANTEZANA, HAROLD SEBASTIAN", "num": 28}, {"id": "4B-29", "nombre": "ZULETA LOPEZ, JEREMY AARON", "num": 29}], "4C": [{"id": "4C-1", "nombre": "ALBAN MONZON, ISAAC IGNACIO", "num": 1}, {"id": "4C-2", "nombre": "ALCOCER CAMPOS, MELANI MELISA", "num": 2}, {"id": "4C-3", "nombre": "APAZA DELGADILLO, NATHANIEL ELIAZER", "num": 3}, {"id": "4C-4", "nombre": "CABRERA UMAÑA, DIANA ALEXA", "num": 4}, {"id": "4C-5", "nombre": "CALDERON MANZEL, AARON NEYMAR", "num": 5}, {"id": "4C-6", "nombre": "CAMACHO ZAMBRANA, LIZ ANDREA", "num": 6}, {"id": "4C-7", "nombre": "CAMARGO PECA, JHOSSTIN ANTHUAN", "num": 7}, {"id": "4C-8", "nombre": "CARVAJAL GABRIEL, HEIDY", "num": 8}, {"id": "4C-9", "nombre": "CLAROS CARREÑO, ROCIO WANDA", "num": 9}, {"id": "4C-10", "nombre": "COYO CHOQUE, ALISON MAYDE", "num": 10}, {"id": "4C-11", "nombre": "GONZALES CORIA, GABRIELA ISABEL", "num": 11}, {"id": "4C-12", "nombre": "GUARACHI FERNANDEZ, RUBEN GABRIEL", "num": 12}, {"id": "4C-13", "nombre": "GUTIERREZ CACERES, JAVIER LIMBERT", "num": 13}, {"id": "4C-14", "nombre": "HUANCA COSSIO, JOSE DAVID", "num": 14}, {"id": "4C-15", "nombre": "HUANCA MAMANI, THIAGO FERNANDO", "num": 15}, {"id": "4C-16", "nombre": "HUARACHI YUCRA, RUTH ALEJANDRA", "num": 16}, {"id": "4C-17", "nombre": "LOPEZ GONZALES, SARAI", "num": 17}, {"id": "4C-18", "nombre": "MAGNE ZUÑIGA, ANDERSON", "num": 18}, {"id": "4C-19", "nombre": "ORELLANA MONTECINOS, JUAN ROMAN", "num": 19}, {"id": "4C-20", "nombre": "ORTEGA CARVALLO, MATIAS EDWIN", "num": 20}, {"id": "4C-21", "nombre": "PANIAGUA GUZMAN, LUCIANA", "num": 21}, {"id": "4C-22", "nombre": "PEREDO PINTO, SANTIAGO JHUNIOR", "num": 22}, {"id": "4C-23", "nombre": "TICONA TORDOYA, DANIELA", "num": 23}, {"id": "4C-24", "nombre": "TICONA MALLON, FABIOLA ISABEL", "num": 24}, {"id": "4C-25", "nombre": "TOROYA YAVE, BRITNEY", "num": 25}, {"id": "4C-26", "nombre": "UGARTE VIDAURRE, LEONEL", "num": 26}, {"id": "4C-27", "nombre": "VARGAS QUINTANA, CRISTAL JAZMIN", "num": 27}, {"id": "4C-28", "nombre": "VILLCA VIZA, PAUL LIZANDRO", "num": 28}], "5A": [{"id": "5A-1", "nombre": "AGNE CUIZA, NICOLAS GABRIEL", "num": 1}, {"id": "5A-2", "nombre": "AGUILAR DIAZ, VALERIN", "num": 2}, {"id": "5A-3", "nombre": "CHAVEZ MARISCAL, JOSUE EZEQUIEL", "num": 3}, {"id": "5A-4", "nombre": "ESPINOZA DELGADO, DERICK GABRIEL", "num": 4}, {"id": "5A-5", "nombre": "GARCIA TOTOLA, MARIANA JHAZMIN", "num": 5}, {"id": "5A-6", "nombre": "GOMEZ SOSA, HELSY SAMUEL", "num": 6}, {"id": "5A-7", "nombre": "GUTIERREZ POMA, KATERIN ALEJANDRA", "num": 7}, {"id": "5A-8", "nombre": "HUANCA FLORES, BENJAMIN AMERICO", "num": 8}, {"id": "5A-9", "nombre": "ICHUTA FERNANDEZ, JHON FRANCO", "num": 9}, {"id": "5A-10", "nombre": "LLAVETA ROJAS, ANTONY", "num": 10}, {"id": "5A-11", "nombre": "LOPEZ CHOQUE, WILSON", "num": 11}, {"id": "5A-12", "nombre": "MAMANI HUAYGUA, SAMUEL", "num": 12}, {"id": "5A-13", "nombre": "ORELLANA MONTECINOS, JOSE ROMAN", "num": 13}, {"id": "5A-14", "nombre": "PEREIRA LOZA, JOSE IGNACIO", "num": 14}, {"id": "5A-15", "nombre": "PEREZ VARGAS, MARIAN CAMILA", "num": 15}, {"id": "5A-16", "nombre": "PUÑA VALENCIA, LUCERO FERNANDA", "num": 16}, {"id": "5A-17", "nombre": "QUISPE AGUILAR, MARCO ANTONIO", "num": 17}, {"id": "5A-18", "nombre": "RIOS MORALES, NEYZA", "num": 18}, {"id": "5A-19", "nombre": "RISUEÑO YUJRA, RONY AYME", "num": 19}, {"id": "5A-20", "nombre": "ROJAS VALDIVIA, DEREK DAVID", "num": 20}, {"id": "5A-21", "nombre": "SARABIA FERNANDEZ, MARCOS GABRIEL", "num": 21}, {"id": "5A-22", "nombre": "SARZUSA CLAROS, VANESSA", "num": 22}, {"id": "5A-23", "nombre": "SOTO ORTIZ, JHAMIL", "num": 23}, {"id": "5A-24", "nombre": "SUSAÑO FLORES, NAIKE REBECA", "num": 24}, {"id": "5A-25", "nombre": "TAPIA ALANEZ, CESAR LEONEL", "num": 25}, {"id": "5A-26", "nombre": "TERAN IRAIPI, JUAN ADON", "num": 26}, {"id": "5A-27", "nombre": "YUJRA MAMANI, JHAMIL SANTOS", "num": 27}, {"id": "5A-28", "nombre": "ZAPATA NOGALES, JHOJAN SANTIAGO", "num": 28}], "5B": [{"id": "5B-1", "nombre": "AQUINO AZURDUY, LUIS FABIAN", "num": 1}, {"id": "5B-2", "nombre": "ARIAS SOTO, JHANN NADAL", "num": 2}, {"id": "5B-3", "nombre": "BLAS HUARITA, JUAN JOSE", "num": 3}, {"id": "5B-4", "nombre": "CANDIA MAITA, MASIEL TIFFANY", "num": 4}, {"id": "5B-5", "nombre": "CHOQUE CONDORI, KIOMMY STEFANI", "num": 5}, {"id": "5B-6", "nombre": "COLQUE CHOQUE, MACIEL TOBIAS", "num": 6}, {"id": "5B-7", "nombre": "CONDORI BERBETTY, CARLOS MATEO", "num": 7}, {"id": "5B-8", "nombre": "CUELLAR LEAÑOS, JOHANA", "num": 8}, {"id": "5B-9", "nombre": "GUTIERREZ ALEGRE, SANTIAGO AMILCAR", "num": 9}, {"id": "5B-10", "nombre": "LEDEZMA MIRANDA, BRITANI MEGAN", "num": 10}, {"id": "5B-11", "nombre": "MAMANI CANQUI, NAIM ANDRES", "num": 11}, {"id": "5B-12", "nombre": "MARTINEZ VILLARROEL, MARECK NEYMAR", "num": 12}, {"id": "5B-13", "nombre": "MICO DIAZ, LUIS", "num": 13}, {"id": "5B-14", "nombre": "MORENO MENESES, JHEISON", "num": 14}, {"id": "5B-15", "nombre": "ORTUSTE ORELLANA, LEONARDO", "num": 15}, {"id": "5B-16", "nombre": "PAREDES SANABRIA, STEFANY MARIEL", "num": 16}, {"id": "5B-17", "nombre": "PEREZ LUGARANI, SANDER", "num": 17}, {"id": "5B-18", "nombre": "QUINTANILLA RAMIREZ, ANTHONY EMANUEL", "num": 18}, {"id": "5B-19", "nombre": "QUIROGA SEJAS, VICTORIA BETENIA", "num": 19}, {"id": "5B-20", "nombre": "ROCA IBAGUARI, FERNANDA", "num": 20}, {"id": "5B-21", "nombre": "RODRIGUEZ RODRIGUEZ, ADRIANA", "num": 21}, {"id": "5B-22", "nombre": "SALINAS CHARUPA, ADRIANA SHELISA", "num": 22}, {"id": "5B-23", "nombre": "SANCHEZ ALMANZA, BERENICE AYLLEN", "num": 23}, {"id": "5B-24", "nombre": "SIÑANIZ ALMANZA, FABIO ALESSANDRO", "num": 24}, {"id": "5B-25", "nombre": "VASQUEZ CHOQUE, BOND JHEIMY", "num": 25}, {"id": "5B-26", "nombre": "ZUBIETA ZENTENO, MARIA JUANA", "num": 26}], "5C": [{"id": "5C-1", "nombre": "ARGANA SOLIZ, LUCIANA MONICA", "num": 1}, {"id": "5C-2", "nombre": "CAMACHO ZAMBRANA, DEBORAH BELEN", "num": 2}, {"id": "5C-3", "nombre": "CHOQUE MENDOZA, ALVARO", "num": 3}, {"id": "5C-4", "nombre": "CHUCAMANI JUYARI, HERLINDA", "num": 4}, {"id": "5C-5", "nombre": "CLAROS TORRES, NICOLAS MATEO", "num": 5}, {"id": "5C-6", "nombre": "CLAURE ARANIBAR, HAZIEL DUZAN", "num": 6}, {"id": "5C-7", "nombre": "CRUZ CALVI, SARA ROSARIO", "num": 7}, {"id": "5C-8", "nombre": "DELGADO LAURA, MILEY ALEXANDRA", "num": 8}, {"id": "5C-9", "nombre": "GONZALES ESTRADA, ADRIEL ANGHELO", "num": 9}, {"id": "5C-10", "nombre": "JARRO CHOQUE, VANIA KEISHA", "num": 10}, {"id": "5C-11", "nombre": "MIRANDA AGUILAR, JHAEL JHEYSON", "num": 11}, {"id": "5C-12", "nombre": "PATIÑO CATALAN, SANTIAGO LEONEL", "num": 12}, {"id": "5C-13", "nombre": "PEREDO SILVA, SANTIAGO", "num": 13}, {"id": "5C-14", "nombre": "POQUECHOQUE CHOQUE, ANGHELI YUMI", "num": 14}, {"id": "5C-15", "nombre": "POSTIGO CORNEJO, ANETH RUBY", "num": 15}, {"id": "5C-16", "nombre": "QUISPE RODRIGUEZ, JHON FRANCO", "num": 16}, {"id": "5C-17", "nombre": "RAMOS FIQUE, OLIVER", "num": 17}, {"id": "5C-18", "nombre": "ROMAY APAZA, JHEYSON CLIVER", "num": 18}, {"id": "5C-19", "nombre": "ROMERO RAMOS, REBECA", "num": 19}, {"id": "5C-20", "nombre": "ROMERO RONDAL, PABLO JOSE", "num": 20}, {"id": "5C-21", "nombre": "SANDOVAL BAZOALTO, AVRIL ASLEY", "num": 21}, {"id": "5C-22", "nombre": "SEGOVIA GARCIA, ELIOTH", "num": 22}, {"id": "5C-23", "nombre": "SULLCA GARCIA, JHOSEP JHADIEL", "num": 23}, {"id": "5C-24", "nombre": "TORRICO MERCADO, DYLAN BRIAN", "num": 24}, {"id": "5C-25", "nombre": "UGARTE VALLEJOS, YASSENDY", "num": 25}, {"id": "5C-26", "nombre": "VARGAS JORA, PAULA", "num": 26}, {"id": "5C-27", "nombre": "ZAMBRANA ESPINOZA, EDUARDO LIAM", "num": 27}], "6A": [{"id": "6A-1", "nombre": "ROJAS, FERNANDA JAZMIN", "num": 1}, {"id": "6A-2", "nombre": "AGUILAR TITO, KEVIN", "num": 2}, {"id": "6A-3", "nombre": "CHAVEZ FERNANDEZ, DIEGO ISRAEL", "num": 3}, {"id": "6A-4", "nombre": "CLAURE GARCIA, DAIRA", "num": 4}, {"id": "6A-5", "nombre": "COCA LOZA, OLIVER GAEL", "num": 5}, {"id": "6A-6", "nombre": "CONDORCOTA CHUCAMANI, ELMER", "num": 6}, {"id": "6A-7", "nombre": "COPALI ESPINOZA, OSVALDO", "num": 7}, {"id": "6A-8", "nombre": "CUSICANQUI RADA, LEANDRO MATEO", "num": 8}, {"id": "6A-9", "nombre": "HINOJOSA CHAMBI, FABRICIO ALEJANDRO", "num": 9}, {"id": "6A-10", "nombre": "MAMANI HUAYGUA, HELEN DHANA", "num": 10}, {"id": "6A-11", "nombre": "MARTINEZ VILLARROEL, NELYA ODAYMIS GABRIELA", "num": 11}, {"id": "6A-12", "nombre": "MENDOZA CONDORI, JHOSELIN LUZ", "num": 12}, {"id": "6A-13", "nombre": "MOLINA BARRIENTOS, NOHELIA JERUSALEN", "num": 13}, {"id": "6A-14", "nombre": "MORALES FLORES, ALAIN NICOLAS", "num": 14}, {"id": "6A-15", "nombre": "PANIAGUA GUZMAN, LUIS MIGUEL", "num": 15}, {"id": "6A-16", "nombre": "PIEDRA CLAROS, AMY KATERYN", "num": 16}, {"id": "6A-17", "nombre": "QUISPE QUISPE, BRENDA ARACELY", "num": 17}, {"id": "6A-18", "nombre": "RAMIREZ ALANIZ, DANIEL", "num": 18}, {"id": "6A-19", "nombre": "RAMOS CEPEDA, ADRIANA", "num": 19}, {"id": "6A-20", "nombre": "RIOS MORALES, JHOSELIN", "num": 20}, {"id": "6A-21", "nombre": "TAPIA OLIVERA, ALEJANDRO OMAR", "num": 21}, {"id": "6A-22", "nombre": "TICONA SURUMI, RUBEN", "num": 22}, {"id": "6A-23", "nombre": "TOLA SOLANO, LUIS MARIO", "num": 23}, {"id": "6A-24", "nombre": "TORIBIO TERAN, ADRIANA ANAHI", "num": 24}, {"id": "6A-25", "nombre": "VALLEJOS ROSALES, NARETH", "num": 25}, {"id": "6A-26", "nombre": "VARGAS AGUILAR, HERLAN ABDIEL", "num": 26}], "6B": [{"id": "6B-1", "nombre": "ARGANDOÑA MOYE, KATHERINE MICHELLE", "num": 1}, {"id": "6B-2", "nombre": "BENITES OJEDA, NICOLAS ROLANDO", "num": 2}, {"id": "6B-3", "nombre": "CACERES SANDY, MAIZA", "num": 3}, {"id": "6B-4", "nombre": "CASTRO SANCHEZ, JOHN MICHAEL", "num": 4}, {"id": "6B-5", "nombre": "CESPEDES OLIVERA, BRENDA BELEN", "num": 5}, {"id": "6B-6", "nombre": "CHALLA MENDOZA, MICHEL ALEJANDRA", "num": 6}, {"id": "6B-7", "nombre": "CLAROS TORRES, GUILLERMO JIMMY", "num": 7}, {"id": "6B-8", "nombre": "COLQUE BRAVO, ANTONY AGUSTIN", "num": 8}, {"id": "6B-9", "nombre": "COLQUE RODRIGUEZ, JHONATAN", "num": 9}, {"id": "6B-10", "nombre": "CONDORI CHINCHILLA, FELIX", "num": 10}, {"id": "6B-11", "nombre": "CUAQUIRA PINTO, JEFFERSON KEVIN", "num": 11}, {"id": "6B-12", "nombre": "DIAZ CAMACHO, GIORGIA VALENTINA", "num": 12}, {"id": "6B-13", "nombre": "DURAN QUILLCA, DARLA REBECA", "num": 13}, {"id": "6B-14", "nombre": "GUARACHI POMA, JOSE ARMANDO", "num": 14}, {"id": "6B-15", "nombre": "GUTIERREZ GONZALO, MARISOL", "num": 15}, {"id": "6B-16", "nombre": "JULIO ENRIQUEZ, LUIS MIGUEL", "num": 16}, {"id": "6B-17", "nombre": "MAMANI SOLIZ, CRISTHIAN MATHIAS", "num": 17}, {"id": "6B-18", "nombre": "MARCE QUIMPE, FERNANDO JAVIER", "num": 18}, {"id": "6B-19", "nombre": "MIRANDA PATZI, BRYANNA SABRINA", "num": 19}, {"id": "6B-20", "nombre": "MITA LIMA, CATRIN HELIANA", "num": 20}, {"id": "6B-21", "nombre": "PACHECO VELASCO, NEREIDA NICOL", "num": 21}, {"id": "6B-22", "nombre": "QUIROGA SAAVEDRA, CAMILA", "num": 22}, {"id": "6B-23", "nombre": "RAMIREZ CLAURE, DARLETH", "num": 23}, {"id": "6B-24", "nombre": "SANCHEZ VELA, NOEMI FERNANDA", "num": 24}, {"id": "6B-25", "nombre": "SANDAGORDA MONTAÑO, GUADALUPE", "num": 25}, {"id": "6B-26", "nombre": "TAPIA ALANEZ, BRANDON KAEL", "num": 26}, {"id": "6B-27", "nombre": "USIEDA ORIHUELA, SERGIO ISRAEL", "num": 27}, {"id": "6B-28", "nombre": "VILLARROEL AñEZ, DULCE NISSAI", "num": 28}], "6C": [{"id": "6C-1", "nombre": "AGUILAR AGUILAR, ALEXANDER", "num": 1}, {"id": "6C-2", "nombre": "ANGULO MAMANI, LUIS FERNANDO", "num": 2}, {"id": "6C-3", "nombre": "CACERES SANDY, SARA", "num": 3}, {"id": "6C-4", "nombre": "CATARI LIZARAZU, JOSUE OCTAVIO", "num": 4}, {"id": "6C-5", "nombre": "CHAMBI PACHECO, SANTIAGO", "num": 5}, {"id": "6C-6", "nombre": "CHAMBI PARISACA, ANTHONY EDUARDO", "num": 6}, {"id": "6C-7", "nombre": "CHAVARRIA ARISPE, JHASMIN ANDREA", "num": 7}, {"id": "6C-8", "nombre": "CHUNGARA BALDIVIEZO, RAFAEL", "num": 8}, {"id": "6C-9", "nombre": "COLQUE CHOQUE, DIANELIS ANAHI", "num": 9}, {"id": "6C-10", "nombre": "CONDORI ESPEJO, NAHY", "num": 10}, {"id": "6C-11", "nombre": "DURAN QUILLCA, DARELA FERNANDA", "num": 11}, {"id": "6C-12", "nombre": "FERNANDEZ QUINTEROS, EMILY GISEL", "num": 12}, {"id": "6C-13", "nombre": "LUNA CHAMBI, JENNIFER", "num": 13}, {"id": "6C-14", "nombre": "MAMANI HUAYGUA, ABIGAIL", "num": 14}, {"id": "6C-15", "nombre": "MAMANI TICONA, RUTH ALEJANDRA", "num": 15}, {"id": "6C-16", "nombre": "MARCA CORANI, CRISTIAN", "num": 16}, {"id": "6C-17", "nombre": "ORTEGA MONTAÑO, JOHAN CHRISTOPHER", "num": 17}, {"id": "6C-18", "nombre": "PARRA CONDORI, NURIA HANNA", "num": 18}, {"id": "6C-19", "nombre": "QUISPE HINOJOSA, JHON DEYVIS", "num": 19}, {"id": "6C-20", "nombre": "REYNOSO HERBAS, NICOL", "num": 20}, {"id": "6C-21", "nombre": "SAJAMA VEIZAGA, ANGEL DANIEL", "num": 21}, {"id": "6C-22", "nombre": "TERAN IRAIPI, JOSE CARLOS", "num": 22}, {"id": "6C-23", "nombre": "TOTOLA PUQUI, LEIDY SOLMAYRA", "num": 23}, {"id": "6C-24", "nombre": "ULURI CORI, GENESIS ESMERALDA", "num": 24}, {"id": "6C-25", "nombre": "VALDIVIEZO MAMANI, SEBASTIAN JENS", "num": 25}, {"id": "6C-26", "nombre": "VELA MARAZA, NOELIA MERY", "num": 26}, {"id": "6C-27", "nombre": "ZUNA ZEBALLOS, ELEXANDER FABIAN", "num": 27}]}
+;
+
+// ESTADO
+let regsG=[],pend=[],ret=[],curAct=null,estAct=null,retEst=null;
+let offlineQ=[];
+try{ret=JSON.parse(localStorage.getItem('ret')||'[]');}catch(e){}
+try{offlineQ=JSON.parse(localStorage.getItem('offlineQ')||'[]');}catch(e){}
+
+function guardarOfflineQ(){try{localStorage.setItem('offlineQ',JSON.stringify(offlineQ));}catch(e){}}
+
+function actualizarEstadoRed(){
+  const online=navigator.onLine;
+  let ind=document.getElementById('net-ind');
+  if(!ind){
+    ind=document.createElement('div');ind.id='net-ind';
+    ind.style.cssText='position:fixed;top:5px;right:54px;font-size:.6rem;padding:2px 8px;border-radius:8px;z-index:9999;font-weight:700;letter-spacing:.5px;pointer-events:none;transition:all .3s;';
+    document.body.appendChild(ind);
+  }
+  if(online){
+    ind.textContent='● ONLINE';ind.style.background='rgba(0,200,100,.2)';ind.style.color='#00c864';
+    sincronizarOffline();
+  } else {
+    const n=offlineQ.length;
+    ind.textContent='● OFFLINE'+(n?' ('+n+' pend.)':'');
+    ind.style.background='rgba(255,68,102,.2)';ind.style.color='#ff4466';
+  }
+}
+
+async function sincronizarOffline(){
+  if(!offlineQ.length)return;
+  const q=[...offlineQ];
+  let ok=0;
+  for(const p of q){
+    try{
+      await fetch(SU,{method:'POST',body:JSON.stringify(p)});
+      const i=offlineQ.findIndex(x=>JSON.stringify(x)===JSON.stringify(p));
+      if(i>=0)offlineQ.splice(i,1);
+      ok++;
+    }catch(err){break;}
+  }
+  guardarOfflineQ();
+  actualizarEstadoRed();
+  if(ok>0)showToast('☁️ '+ok+' registro'+(ok>1?'s':'')+' sincronizado'+(ok>1?'s':'')+' con Sheets');
+}
+
+window.addEventListener('online',actualizarEstadoRed);
+window.addEventListener('offline',actualizarEstadoRed);
+setInterval(()=>{if(navigator.onLine&&offlineQ.length)sincronizarOffline();},30000);
+
+// RELOJ
+function tick(){
+  const t=new Date(),ts=t.toLocaleTimeString('es-BO',{hour:'2-digit',minute:'2-digit'});
+  document.querySelectorAll('[id^=clk]').forEach(el=>el.textContent=ts);
+  const f=document.getElementById('fch');
+  if(f)f.textContent=t.toLocaleDateString('es-BO',{weekday:'short',day:'numeric',month:'short'});
+}
+setInterval(tick,1000);tick();
+
+// NAVEGACIÓN
+function goto(id){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  setTimeout(()=>{
+    const first=document.querySelector('#'+id+' .mbtn, #'+id+' .cbtn, #'+id+' .ebtn, #'+id+' .ibtn, #'+id+' .dbtn, #'+id+' .okbtn, #'+id+' input');
+    if(first)first.focus();
+  },60);
+}
+
+// SEMÁFORO
+function sem(cid){
+  const all=[...regsG,...pend].filter(x=>x[1]===cid);
+  if(!all.length)return{niv:'n',lbl:'',c:'var(--muted)'};
+  const pe={};
+  all.forEach(x=>{if(!pe[x[2]])pe[x[2]]={L:0,G:0,MG:0};pe[x[2]][x[3]]++;});
+  let ro=0,am=0;
+  Object.values(pe).forEach(e=>{if(e.MG>0||e.G>=2||e.L>=4)ro++;else if(e.G>=1||e.L>=2)am++;});
+  if(ro>0)return{niv:'r',lbl:ro+' RIESGO',c:'var(--rojo)'};
+  if(am>0)return{niv:'a',lbl:am+' ATENCIÓN',c:'var(--leve)'};
+  return{niv:'v',lbl:all.length+'r',c:'var(--green)'};
+}
+
+// CURSOS
+function renderCursos(){
+  const g=document.getElementById('cgrid');g.innerHTML='';
+  CURSOS.forEach(c=>{
+    const s=sem(c.id),b=document.createElement('button');
+    b.className='cbtn';
+    if(s.niv==='r')b.style.borderColor='rgba(255,68,102,.5)';
+    else if(s.niv==='a')b.style.borderColor='rgba(245,166,35,.4)';
+    b.innerHTML='<div class="cnum">'+c.id+'</div><div class="cnom">'+c.n+'</div>'
+      +'<div class="csem"><div class="dot dv'+(s.niv==='v'&&s.lbl?' on':'')+'"></div>'
+      +'<div class="dot da'+(s.niv==='a'?' on':'')+'"></div>'
+      +'<div class="dot dr'+(s.niv==='r'?' on':'')+'"></div></div>'
+      +(s.lbl?'<div class="cest" style="color:'+s.c+'">'+s.lbl+'</div>':'');
+    b.onclick=()=>abrirCurso(c);
+    g.appendChild(b);
+  });
+}
+
+function abrirCurso(c){
+  curAct=c;estAct=null;
+  document.getElementById('sr-titulo').textContent=c.id+' — '+c.n;
+  document.getElementById('buscar').value='';
+  document.getElementById('iph').style.display='flex';
+  document.getElementById('isel').style.display='none';
+  actualizarBadge();
+  renderEst('');
+  goto('sr');
+}
+
+function actualizarBadge(){
+  const p=pend.length,b=document.getElementById('pend-badge'),btn=document.getElementById('finbtn');
+  if(p>0){b.style.display='';b.textContent='⏳ '+p;btn.disabled=false;}
+  else{b.style.display='none';btn.disabled=true;}
+}
+
+// ESTUDIANTES
+function renderEst(q){
+  const todos=ED[curAct.id]||[],all=[...regsG,...pend];
+  const elist=document.getElementById('elist');elist.innerHTML='';
+  const fil=q?todos.filter(e=>e.nombre.toLowerCase().includes(q.toLowerCase())):todos;
+  fil.forEach(e=>{
+    const r=ret.includes(e.id),regs=all.filter(x=>x[2]===e.nombre&&x[1]===curAct.id);
+    const lv=regs.filter(x=>x[3]==='L').length,gr=regs.filter(x=>x[3]==='G').length,mg=regs.filter(x=>x[3]==='MG').length;
+    const pn=pend.filter(x=>x[2]===e.nombre&&x[1]===curAct.id).length;
+    const b=document.createElement('button');
+    b.className='ebtn'+(r?' ret':'')+(estAct&&estAct.id===e.id?' sel':'');
+    b.innerHTML='<span class="enum">#'+e.num+'</span>'
+      +'<span class="ename">'+e.nombre+'</span>'
+      +'<span class="ebadges">'
+      +(r?'<span class="bx" style="color:#888;background:rgba(100,100,100,.2)">RET</span>':'')
+      +(pn?'<span class="bx bP">'+pn+'⏳</span>':'')
+      +(lv?'<span class="bx bL">'+lv+'L</span>':'')
+      +(gr?'<span class="bx bG">'+gr+'G</span>':'')
+      +(mg?'<span class="bx bMG">'+mg+'MG</span>':'')
+      +'</span>';
+    // botón X para retirar
+    const xb=document.createElement('button');
+    xb.className='xbtn';xb.textContent=r?'↩':'✕';
+    xb.onclick=ev=>{ev.stopPropagation();pedirRet(e.id,e.nombre,r?'rest':'ret');};
+    b.appendChild(xb);
+    if(!r)b.onclick=()=>selEst(e);
+    elist.appendChild(b);
+  });
+}
+
+function filtrar(q){renderEst(q);}
+
+function selEst(e){
+  estAct=e;
+  document.getElementById('isel-name').textContent=e.nombre;
+  document.getElementById('isel-curso').textContent=curAct.id+' — '+curAct.n;
+  document.getElementById('iph').style.display='none';
+  document.getElementById('isel').style.display='flex';
+  renderInf();
+  // enfocar primer infracción para control remoto
+  setTimeout(()=>{const f=document.querySelector('#ilist .ibtn');if(f)f.focus();},60);
+  // re-render para marcar seleccionado
+  renderEst(document.getElementById('buscar').value);
+}
+
+// INFRACCIONES — todas en una lista
+function renderInf(){
+  const il=document.getElementById('ilist');il.innerHTML='';
+  ['L','G','MG'].forEach(tipo=>{
+    const col=tipo==='L'?'var(--leve)':tipo==='G'?'var(--grave)':'var(--rojo)';
+    const lbl=tipo==='L'?'FALTAS LEVES':tipo==='G'?'FALTAS GRAVES':'MUY GRAVES';
+    const sec=document.createElement('div');
+    sec.className='isec isec-'+tipo;sec.textContent=lbl;
+    il.appendChild(sec);
+    INF[tipo].forEach(s=>{
+      const b=document.createElement('button');b.className='ibtn';
+      b.innerHTML='<span class="icod" style="color:'+col+'">'+s.c+'</span>'
+        +'<span><div class="itxt">'+s.t+'</div><div class="iart">Art. '+s.a+'</div></span>';
+      b.onclick=()=>registrar(tipo,s);
+      il.appendChild(b);
+    });
+  });
+}
+
+// REGISTRAR — directo, sin confirmación
+function registrar(tipo,sub){
+  if(!estAct)return;
+  pend.push([new Date().toLocaleString('es-BO'),curAct.id,estAct.nombre,tipo,sub.c,sub.t,'']);
+  actualizarBadge();
+  showToast('✅ '+sub.c+' — '+estAct.nombre.split(',')[0]);
+  // volver foco a lista de estudiantes
+  estAct=null;
+  document.getElementById('iph').style.display='flex';
+  document.getElementById('isel').style.display='none';
+  renderEst(document.getElementById('buscar').value);
+  renderCursos();
+  setTimeout(()=>{
+    const f=document.querySelector('#elist .ebtn:not(.ret)');if(f)f.focus();
+  },60);
+}
+
+// FINALIZAR
+function mostrarFin(){
+  const res=document.getElementById('fresumen');
+  res.innerHTML=pend.length?pend.map(p=>{
+    const col=p[3]==='L'?'var(--leve)':p[3]==='G'?'var(--grave)':'var(--rojo)';
+    return'<div class="frow"><span style="font-weight:800">'+p[2].split(',')[0]+'</span>'
+      +'<span style="color:var(--muted);font-size:.7rem">'+p[1]+'</span>'
+      +'<span class="fcod" style="color:'+col+'">'+p[4]+'</span></div>';
+  }).join(''):'<div style="text-align:center;color:var(--muted);padding:10px">Sin registros</div>';
+  const dg=document.getElementById('dgrid');dg.innerHTML='';
+  DOCS.forEach(d=>{
+    const b=document.createElement('button');b.className='dbtn';
+    b.innerHTML='<div class="darea">'+d.a+'</div><div class="dname">'+d.n+'</div>';
+    b.onclick=()=>enviar(d.n);
+    dg.appendChild(b);
+  });
+  goto('sf');
+}
+
+async function enviar(doc){
+  const total=pend.length;
+  if(!total){goto('sr');return;}
+  const payload=pend.map(p=>({curso:p[1],estudiante:p[2]||'(sin nombre)',tipo:p[3],codigo:p[4],descripcion:p[5],docente:doc}));
+  pend.forEach(p=>{p[6]=doc;regsG.push(p);});
+  pend=[];actualizarBadge();renderCursos();
+  if(navigator.onLine){
+    let enviados=0;
+    for(const p of payload){
+      try{await fetch(SU,{method:'POST',body:JSON.stringify(p)});enviados++;}
+      catch(e){offlineQ.push(p);}
+    }
+    guardarOfflineQ();
+    const enQ=payload.length-enviados;
+    const msg=enviados+' enviado'+(enviados!==1?'s':'')+(enQ?' · '+enQ+' guardado'+(enQ>1?'s':'')+' offline':'');
+    document.getElementById('oks').textContent=msg+' · '+doc;
+  } else {
+    payload.forEach(p=>offlineQ.push(p));
+    guardarOfflineQ();
+    actualizarEstadoRed();
+    document.getElementById('oks').textContent='📴 '+total+' guardado'+(total!==1?'s':'')+' offline · se enviarán al reconectarse';
+  }
+  goto('sok');
+}
+
+// RETIRAR
+function pedirRet(id,nombre,accion){
+  retEst={id,nombre,accion};
+  document.getElementById('mtit').textContent=accion==='rest'?'↩ REACTIVAR':'⚠️ RETIRAR';
+  document.getElementById('mnombre').textContent=nombre;
+  document.getElementById('mov').classList.add('on');
+}
+function confirmarRet(){
+  if(!retEst)return;
+  if(retEst.accion==='ret'){if(!ret.includes(retEst.id))ret.push(retEst.id);}
+  else ret=ret.filter(r=>r!==retEst.id);
+  try{localStorage.setItem('ret',JSON.stringify(ret));}catch(e){}
+  document.getElementById('mov').classList.remove('on');
+  renderEst(document.getElementById('buscar').value);
+}
+
+// PANEL
+function abrirPanel(){cargarPanel();goto('sp');}
+async function cargarPanel(){
+  document.getElementById('ptbody').innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">⏳ Cargando...</td></tr>';
+  try{
+    const res=await fetch(SU+'?t='+Date.now()),json=await res.json();
+    const data=(json.data||[]).filter(r=>r[0]&&r[0]!=='Fecha/Hora'&&r[0]!=='Fecha'&&r[1]!=='Docentes'&&r[1]!=='docentes'&&(r[3]==='L'||r[3]==='G'||r[3]==='MG'));
+    regsG=data;renderCursos();
+    document.getElementById('pt').textContent=data.length;
+    document.getElementById('pl').textContent=data.filter(r=>r[3]==='L').length;
+    document.getElementById('pg').textContent=data.filter(r=>r[3]==='G').length;
+    document.getElementById('pm').textContent=data.filter(r=>r[3]==='MG').length;
+    if(!data.length){document.getElementById('ptbody').innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">Sin registros</td></tr>';return;}
+    document.getElementById('ptbody').innerHTML=[...data].reverse().map((r,i)=>{
+      const idx=data.length-1-i,col=r[3]==='L'?'var(--leve)':r[3]==='G'?'var(--grave)':'var(--rojo)';
+      return'<tr><td style="color:var(--muted);font-size:.7rem;white-space:nowrap">'+(r[0]||'')+'</td><td><strong>'+(r[1]||'')+'</strong></td><td style="font-size:.74rem">'+(r[2]||'')+'</td><td><span class="tt" style="background:'+col+'22;color:'+col+'">'+(r[3]==='L'?'LEVE':r[3]==='G'?'GRAVE':'MUY GRAVE')+'</span><br><small style="color:var(--muted)">'+(r[4]||'')+'</small></td><td style="font-size:.7rem">'+(r[5]||'')+'</td><td style="color:var(--muted);font-size:.7rem">'+(r[6]||'')+'</td><td><button onclick="elimReg('+idx+')" style="background:rgba(255,68,102,.15);border:1px solid rgba(255,68,102,.3);color:var(--rojo);border-radius:4px;padding:2px 7px;cursor:pointer;font-size:.7rem;">✕</button></td></tr>';
+    }).join('');
+  }catch(e){document.getElementById('ptbody').innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--rojo)">⚠️ Sin conexión</td></tr>';}
+}
+function elimReg(idx){
+  const r=regsG[idx];if(!r)return;
+  if(!confirm('¿Eliminar falta de '+r[2]+'?'))return;
+  fetch(SU,{method:'POST',body:JSON.stringify({action:'delete',curso:r[1],fecha:r[0],estudiante:r[2],codigo:r[4]})})
+    .then(function(res){return res.ok?res.json():Promise.reject(res.status);})
+    .then(function(){regsG.splice(idx,1);cargarPanel();showToast('🗑 Eliminado');})
+    .catch(function(e){
+      // Si falla CORS (archivo local) igual actualiza la vista local
+      regsG.splice(idx,1);cargarPanel();showToast('🗑 Eliminado localmente');
+    });
+}
+
+// ══════ LOGIN ══════
+var SESSION = null;
+
+(function() {
+  // Restaurar sesión guardada
+  try {
+    var s = sessionStorage.getItem('nsp_session');
+    if (s) {
+      SESSION = JSON.parse(s);
+      document.getElementById('slogin').classList.remove('on');
+      document.getElementById('si').classList.add('on');
+    }
+  } catch(e) {}
+})();
+
+document.getElementById('lg-pin').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') lgIngresar();
+});
+
+async function lgIngresar() {
+  var pin    = document.getElementById('lg-pin').value.trim();
+  var err    = document.getElementById('lg-error');
+  var btn    = document.getElementById('lg-btn');
+  if (!pin) { lgError('Ingresa tu PIN'); return; }
+  btn.disabled = true; btn.textContent = '⏳ Verificando...';
+  err.style.display = 'none';
+  try {
+    var r = await fetch(SU, {
+      method: 'POST',
+      body: JSON.stringify({ action:'login', pin:pin })
+    });
+    var d = await r.json();
+    if (d.ok) {
+      SESSION = { nombre:d.nombre, rol:d.rol };
+      try { sessionStorage.setItem('nsp_session', JSON.stringify(SESSION)); } catch(e) {}
+      var sel = document.getElementById('rq-doc');
+      if (sel) {
+        var opt = document.createElement('option');
+        opt.value = d.nombre; opt.textContent = d.nombre; opt.selected = true;
+        sel.insertBefore(opt, sel.firstChild);
+      }
+      document.getElementById('slogin').classList.remove('on');
+      document.getElementById('si').classList.add('on');
+      var nm = document.getElementById('lg-nombre');
+      if (nm) nm.textContent = '👤 ' + d.nombre;
+    } else {
+      lgError(d.msg || 'PIN incorrecto');
+    }
+  } catch(e) {
+    lgError('Sin conexión. Verifica internet.');
+  }
+  btn.disabled = false; btn.textContent = 'INGRESAR';
+}
+
+function lgError(msg) {
+  var err = document.getElementById('lg-error');
+  err.textContent = '⚠️ ' + msg;
+  err.style.display = 'block';
+}
+
+function lgCerrarSesion() {
+  SESSION = null;
+  try { sessionStorage.removeItem('nsp_session'); } catch(e) {}
+  document.getElementById('si').classList.remove('on');
+  document.getElementById('slogin').classList.add('on');
+  document.getElementById('lg-pin').value = '';
+  document.getElementById('lg-error').style.display = 'none';
+}
+
+// TOAST
+let tt;
+function showToast(msg,err=false){
+  const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(err?' err':'');
+  requestAnimationFrame(()=>t.classList.add('show'));
+  clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+// CONTROL REMOTO / TECLADO
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('mov').classList.contains('on')){
+    if(e.key==='Escape')document.getElementById('mov').classList.remove('on');
+    return;
+  }
+  const sc=document.querySelector('.scr.on');if(!sc)return;
+  if(e.key==='Backspace'||e.keyCode===10009){
+    const b=sc.querySelector('.back');if(b){e.preventDefault();b.click();}return;
+  }
+  const items=Array.from(sc.querySelectorAll('button:not(:disabled):not(.xbtn),input')).filter(el=>!el.closest('.ov')&&el.offsetParent!==null);
+  const idx=items.indexOf(document.activeElement);
+  if(e.key==='ArrowDown'||e.key==='ArrowRight'){e.preventDefault();if(idx<items.length-1)items[idx+1].focus();}
+  else if(e.key==='ArrowUp'||e.key==='ArrowLeft'){e.preventDefault();if(idx>0)items[idx-1].focus();}
+  else if((e.key==='Enter'||e.key===' ')&&document.activeElement?.tagName!=='INPUT'){e.preventDefault();document.activeElement.click();}
+});
+
+renderCursos();
+
+// ══════ REGISTRO RÁPIDO ══════
+var RQ = { seleccionados: [] };
+var COLORES_TIPO = { L:'#F5A623', G:'#E05A00', MG:'#C0001A' };
+
+function abrirRapido() {
+  var sel = document.getElementById('rq-curso');
+  if (sel.options.length <= 1) {
+    CURSOS.forEach(function(cu) {
+      var op = document.createElement('option');
+      op.value = cu.id; op.textContent = cu.id + ' — ' + cu.n;
+      sel.appendChild(op);
+    });
+  }
+  var hoy = new Date();
+  document.getElementById('rq-fecha').value =
+    hoy.getFullYear()+'-'+String(hoy.getMonth()+1).padStart(2,'0')+'-'+String(hoy.getDate()).padStart(2,'0');
+  if (!document.getElementById('rq-leves').children.length) rqRenderBotones();
+  rqLimpiar();
+  goto('socr');
+}
+
+function rqRenderBotones() {
+  var grupos = [
+    { id:'rq-leves',  lista:INF.L,  tipo:'L'  },
+    { id:'rq-graves', lista:INF.G,  tipo:'G'  },
+    { id:'rq-mg',     lista:INF.MG, tipo:'MG' },
+  ];
+  grupos.forEach(function(g) {
+    var cont = document.getElementById(g.id);
+    g.lista.forEach(function(inf) {
+      var btn = document.createElement('button');
+      btn.id = 'rqb-' + inf.c;
+      btn.setAttribute('data-cod', inf.c);
+      btn.setAttribute('data-tipo', g.tipo);
+      btn.style.cssText =
+        'background:#1a1a2e;border:2px solid '+COLORES_TIPO[g.tipo]+';border-radius:10px;'+
+        'padding:8px 4px;cursor:pointer;display:flex;flex-direction:column;'+
+        'align-items:center;gap:3px;transition:all .15s;';
+      btn.innerHTML =
+        '<span style="font-size:.95rem;font-weight:900;color:'+COLORES_TIPO[g.tipo]+'">'+inf.c+'</span>'+
+        '<span style="font-size:.6rem;color:#aaa;text-align:center;line-height:1.2;">'+inf.t+'</span>';
+      btn.onclick = function() { rqToggle(inf.c, g.tipo, inf.t, inf.a); };
+      cont.appendChild(btn);
+    });
+  });
+}
+
+function rqToggle(cod, tipo, desc, art) {
+  var btn = document.getElementById('rqb-' + cod);
+  var idx = RQ.seleccionados.findIndex(function(x){ return x.codigo === cod; });
+  if (idx >= 0) {
+    RQ.seleccionados.splice(idx, 1);
+    btn.style.background = '#1a1a2e';
+    btn.style.transform = 'scale(1)';
+    btn.querySelector('span').style.color = COLORES_TIPO[tipo];
+  } else {
+    RQ.seleccionados.push({ codigo:cod, tipo:tipo, descripcion:desc, articulo:art||'' });
+    btn.style.background = COLORES_TIPO[tipo];
+    btn.style.transform = 'scale(.96)';
+    btn.querySelector('span').style.color = '#fff';
+  }
+  rqActualizarResumen();
+}
+
+function rqActualizarResumen() {
+  var res = document.getElementById('rq-resumen');
+  var lista = document.getElementById('rq-lista');
+  var btn = document.getElementById('rq-btn-guardar');
+  var est = document.getElementById('rq-est').value;
+  lista.innerHTML = '';
+  if (RQ.seleccionados.length === 0) {
+    res.style.display = 'none';
+    btn.disabled = true; btn.style.opacity = '.4'; return;
+  }
+  res.style.display = 'block';
+  btn.disabled = !est; btn.style.opacity = (est && RQ.seleccionados.length > 0) ? '1' : '.4';
+  RQ.seleccionados.forEach(function(f) {
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 8px;background:#0a1628;border-radius:8px;border-left:3px solid '+COLORES_TIPO[f.tipo]+';';
+    var codEsc = f.codigo.replace(/'/g,"\\'");
+    var tipEsc = f.tipo.replace(/'/g,"\\'");
+    var desEsc = f.descripcion.replace(/'/g,"\\'");
+    var artEsc = (f.articulo||'').replace(/'/g,"\\'");
+    row.innerHTML =
+      '<span style="background:'+COLORES_TIPO[f.tipo]+';color:#fff;border-radius:4px;padding:2px 7px;font-size:.75rem;font-weight:900;">'+f.codigo+'</span>'+
+      '<span style="color:#ccc;font-size:.8rem;flex:1;">'+f.descripcion+'</span>'+
+      '<button onclick="rqToggle(\''+codEsc+'\',\''+tipEsc+'\',\''+desEsc+'\',\''+artEsc+'\')" style="background:none;border:none;color:#666;font-size:1rem;cursor:pointer;padding:0;">✕</button>';
+    lista.appendChild(row);
+  });
+}
+
+function rqCargarEst() {
+  var cid = document.getElementById('rq-curso').value;
+  var sel = document.getElementById('rq-est');
+  sel.innerHTML = '<option value="">— Estudiante —</option>';
+  document.getElementById('rq-est-info').style.display = 'none';
+  if (!cid) return;
+  (ED[cid]||[]).forEach(function(e) {
+    var op = document.createElement('option');
+    op.value = e.id; op.textContent = '#'+e.num+' — '+e.nombre;
+    sel.appendChild(op);
+  });
+  sel.onchange = function() {
+    var inf = document.getElementById('rq-est-info');
+    var v = sel.value;
+    if (!v) { inf.style.display='none'; return; }
+    var est = (ED[cid]||[]).find(function(x){ return x.id===v; });
+    if (est) { inf.style.display='block'; inf.textContent='✓ '+est.nombre+' | Curso '+cid+' N°'+est.num; }
+    var btn = document.getElementById('rq-btn-guardar');
+    btn.disabled = RQ.seleccionados.length===0;
+    btn.style.opacity = (RQ.seleccionados.length>0) ? '1' : '.4';
+  };
+}
+
+function rqLimpiar() {
+  RQ.seleccionados = [];
+  [].concat(INF.L, INF.G, INF.MG).forEach(function(inf) {
+    var btn = document.getElementById('rqb-' + inf.c);
+    if (!btn) return;
+    var tipo = btn.getAttribute('data-tipo');
+    btn.style.background = '#1a1a2e';
+    btn.style.transform = 'scale(1)';
+    var span = btn.querySelector('span');
+    if (span) span.style.color = COLORES_TIPO[tipo];
+  });
+  document.getElementById('rq-resumen').style.display = 'none';
+  var btnG = document.getElementById('rq-btn-guardar');
+  btnG.disabled = true; btnG.style.opacity = '.4';
+  document.getElementById('rq-estado').textContent = '';
+}
+
+async function rqGuardar() {
+  var cid = document.getElementById('rq-curso').value;
+  var eid = document.getElementById('rq-est').value;
+  var fechaVal = document.getElementById('rq-fecha').value;
+  var docente = document.getElementById('rq-doc').value;
+  if (!cid || !eid) { showToast('Selecciona curso y estudiante', true); return; }
+  if (RQ.seleccionados.length === 0) { showToast('Selecciona al menos una falta', true); return; }
+  var est = (ED[cid]||[]).find(function(x){ return x.id===eid; });
+  if (!est) return;
+  var fechaFmt = fechaVal ? fechaVal.split('-').reverse().join('/') : new Date().toLocaleDateString('es-BO');
+  var btn = document.getElementById('rq-btn-guardar');
+  btn.disabled = true; btn.textContent = '⏳ Guardando...';
+  document.getElementById('rq-estado').textContent = 'Enviando '+RQ.seleccionados.length+' falta(s)...';
+  var ok=0, err=0;
+  for (var i=0; i<RQ.seleccionados.length; i++) {
+    var f = RQ.seleccionados[i];
+    try {
+      var r = await fetch(SU, {
+        method:'POST',
+        body: JSON.stringify({
+          curso:cid, estId:est.id, nombre:est.nombre,
+          tipo:f.tipo, codigo:f.codigo, descripcion:f.descripcion,
+          articulo:f.articulo, fecha:fechaFmt,
+          docente:docente, origen:'registro-rapido'
+        })
+      });
+      if (r.ok) ok++; else err++;
+    } catch(e) { err++; }
+  }
+  document.getElementById('rq-estado').textContent = '✓ '+ok+' falta(s) guardadas'+(err?' — '+err+' error(es)':'');
+  showToast(ok+' falta(s) guardadas ✓');
+  btn.textContent = '✅ GUARDAR FALTAS'; btn.disabled = false;
+  setTimeout(function() {
+    rqLimpiar();
+    document.getElementById('rq-est').value = '';
+    document.getElementById('rq-est-info').style.display = 'none';
+    document.getElementById('rq-estado').textContent = 'Listo para siguiente estudiante';
+  }, 1800);
+}
+</script>
+
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js')
+      .then(r=>console.log('SW:',r.scope))
+      .catch(e=>console.warn('SW error:',e));
+  });
+}
+actualizarEstadoRed();
+</script>
+</body>
