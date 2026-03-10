@@ -739,15 +739,19 @@ function elimReg(idx){
 
 // ══════ LOGIN ══════
 var SESSION = null;
+var PINS_LOCAL = {};
+try { PINS_LOCAL = JSON.parse(localStorage.getItem('nsp_pins')||'{}'); } catch(e) {}
 
 (function() {
-  // Restaurar sesión guardada
+  // Restaurar sesión guardada — localStorage persiste al cerrar el navegador
   try {
-    var s = sessionStorage.getItem('nsp_session');
+    var s = localStorage.getItem('nsp_session');
     if (s) {
       SESSION = JSON.parse(s);
       document.getElementById('slogin').classList.remove('on');
       document.getElementById('si').classList.add('on');
+      var nm = document.getElementById('lg-nombre');
+      if (nm && SESSION.nombre) nm.textContent = '👤 ' + SESSION.nombre;
     }
   } catch(e) {}
 })();
@@ -757,38 +761,62 @@ document.getElementById('lg-pin').addEventListener('keydown', function(e) {
 });
 
 async function lgIngresar() {
-  var pin    = document.getElementById('lg-pin').value.trim();
-  var err    = document.getElementById('lg-error');
-  var btn    = document.getElementById('lg-btn');
+  var pin = document.getElementById('lg-pin').value.trim();
+  var err = document.getElementById('lg-error');
+  var btn = document.getElementById('lg-btn');
   if (!pin) { lgError('Ingresa tu PIN'); return; }
   btn.disabled = true; btn.textContent = '⏳ Verificando...';
   err.style.display = 'none';
-  try {
-    var r = await fetch(SU, {
-      method: 'POST',
-      body: JSON.stringify({ action:'login', pin:pin })
-    });
-    var d = await r.json();
-    if (d.ok) {
-      SESSION = { nombre:d.nombre, rol:d.rol };
-      try { sessionStorage.setItem('nsp_session', JSON.stringify(SESSION)); } catch(e) {}
-      var sel = document.getElementById('rq-doc');
-      if (sel) {
-        var opt = document.createElement('option');
-        opt.value = d.nombre; opt.textContent = d.nombre; opt.selected = true;
-        sel.insertBefore(opt, sel.firstChild);
+
+  if (navigator.onLine) {
+    // ── ONLINE: verifica con Google Sheets ──
+    try {
+      var r = await fetch(SU, {
+        method: 'POST',
+        body: JSON.stringify({ action:'login', pin:pin })
+      });
+      var d = await r.json();
+      if (d.ok) {
+        SESSION = { nombre:d.nombre, rol:d.rol };
+        // Guardar sesión Y cachear PIN para uso offline futuro
+        try {
+          localStorage.setItem('nsp_session', JSON.stringify(SESSION));
+          PINS_LOCAL[pin] = { nombre:d.nombre, rol:d.rol };
+          localStorage.setItem('nsp_pins', JSON.stringify(PINS_LOCAL));
+        } catch(e) {}
+        lgEntrar(d.nombre);
+      } else {
+        lgError(d.msg || 'PIN incorrecto');
       }
-      document.getElementById('slogin').classList.remove('on');
-      document.getElementById('si').classList.add('on');
-      var nm = document.getElementById('lg-nombre');
-      if (nm) nm.textContent = '👤 ' + d.nombre;
-    } else {
-      lgError(d.msg || 'PIN incorrecto');
+    } catch(e) {
+      lgError('Error de conexión. Intenta de nuevo.');
     }
-  } catch(e) {
-    lgError('Sin conexión. Verifica internet.');
+  } else {
+    // ── OFFLINE: verifica con caché local ──
+    var cached = PINS_LOCAL[pin];
+    if (cached) {
+      SESSION = { nombre:cached.nombre, rol:cached.rol };
+      try { localStorage.setItem('nsp_session', JSON.stringify(SESSION)); } catch(e) {}
+      lgEntrar(cached.nombre);
+      showToast('📴 Modo offline — sesión guardada');
+    } else {
+      lgError('Sin internet. Conéctate al menos una vez para guardar tu PIN.');
+    }
   }
   btn.disabled = false; btn.textContent = 'INGRESAR';
+}
+
+function lgEntrar(nombre) {
+  var sel = document.getElementById('rq-doc');
+  if (sel && !Array.from(sel.options).find(function(o){return o.value===nombre;})) {
+    var opt = document.createElement('option');
+    opt.value = nombre; opt.textContent = nombre; opt.selected = true;
+    sel.insertBefore(opt, sel.firstChild);
+  }
+  document.getElementById('slogin').classList.remove('on');
+  document.getElementById('si').classList.add('on');
+  var nm = document.getElementById('lg-nombre');
+  if (nm) nm.textContent = '👤 ' + nombre;
 }
 
 function lgError(msg) {
@@ -799,7 +827,7 @@ function lgError(msg) {
 
 function lgCerrarSesion() {
   SESSION = null;
-  try { sessionStorage.removeItem('nsp_session'); } catch(e) {}
+  try { localStorage.removeItem('nsp_session'); } catch(e) {}
   document.getElementById('si').classList.remove('on');
   document.getElementById('slogin').classList.add('on');
   document.getElementById('lg-pin').value = '';
