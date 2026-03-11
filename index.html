@@ -411,7 +411,7 @@ tr:hover td{background:rgba(46,117,182,.07);}
       <div class="logo">&#128202; PANEL DIRECCIÓN</div>
     </div>
     <button class="back" onclick="cargarPanel()" style="border-color:var(--accent);color:var(--accent);">&#128260; ACTUALIZAR</button>
-      <button onclick="generarPDFCurso()" style="background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);color:var(--accent);padding:6px 14px;border-radius:6px;font-size:.75rem;font-weight:700;cursor:pointer;margin-left:6px;">&#128196; PDF CURSO</button>
+    <button onclick="generarPDFCurso()" style="background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);color:var(--accent);padding:6px 14px;border-radius:6px;font-size:.75rem;font-weight:700;cursor:pointer;margin-left:6px;">&#128196; PDF CURSO</button>
   </div>
   <div class="body">
     <div class="stats">
@@ -444,7 +444,7 @@ tr:hover td{background:rgba(46,117,182,.07);}
 <div class="hint">&#8593;&#8595; Navegar &nbsp;&#9646; OK &nbsp;&#8592; Volver</div>
 
 <script>
-const SU='https://script.google.com/macros/s/AKfycbyCoXxxQA-nBNo1w966uJvymgikbnMyunJSx8iv3605X7Pmq4cifWV1YtjuPDfC-U7KwA/exec';
+const SU='https://script.google.com/macros/s/AKfycbzo48ywWcrAdt0OzGYlHQV9UX1_Osorw_Fu6-fE-Thm4miXmlQTumHdijuD7qxqFdZA/exec';
 const CURSOS=[{id:'2A',n:'2do "A"'},{id:'2B',n:'2do "B"'},{id:'2C',n:'2do "C"'},{id:'3A',n:'3ro "A"'},{id:'3B',n:'3ro "B"'},{id:'3C',n:'3ro "C"'},{id:'4A',n:'4to "A"'},{id:'4B',n:'4to "B"'},{id:'4C',n:'4to "C"'},{id:'5A',n:'5to "A"'},{id:'5B',n:'5to "B"'},{id:'5C',n:'5to "C"'},{id:'6A',n:'6to "A"'},{id:'6B',n:'6to "B"'},{id:'6C',n:'6to "C"'}];
 const DOCS=[{a:'Música',n:'Prof. Marcelo'},{a:'Biología',n:'Prof. Beatriz'},{a:'Biología',n:'Prof. Mónica'},{a:'Biología',n:'Prof. Leydi'},{a:'Física',n:'Prof. Victor Quiroz'},{a:'Química',n:'Prof. Victor Paricagua'},{a:'Lenguaje',n:'Prof. Anai'},{a:'Lenguaje',n:'Prof. Liliana B.'},{a:'Inglés',n:'Prof. Jhannet'},{a:'Cs. Sociales',n:'Prof. Ronald'},{a:'Cs. Sociales',n:'Prof. Mirian Aguilar'},{a:'Cs. Sociales',n:'Prof. Mirian Orellana'},{a:'Cs. Sociales',n:'Prof. Mirian Taquichiri'},{a:'Ed. Física',n:'Prof. Victor Quispe'},{a:'Ed. Física',n:'Prof. Isaac Jiménez'},{a:'Artes',n:'Prof. Magali'},{a:'Artes',n:'Prof. Valentina Colque'},{a:'Psicología',n:'Prof. Aida Arauco'},{a:'Filosofía',n:'Prof. Dubeysa Arévalo'},{a:'Valores',n:'Prof. Victor Mamani'},{a:'Valores',n:'Prof. Roxana Araoz'},{a:'Matemáticas',n:'Prof. Eddy Osinaga'},{a:'Matemáticas',n:'Prof. Juan Aguilar'},{a:'Matemáticas',n:'Prof. Jorge C.'},{a:'Matemáticas',n:'Prof. Lourdes Gutiérrez'},{a:'Matemáticas',n:'Prof. Roy'},{a:'Música',n:'Prof. Olga Chambi'},{a:'Tecnología',n:'Prof. Silvio Pacheco'},{a:'Comunicación',n:'Prof. Rosemary'}];
 const INF={L:[{c:'L-1',t:'Llegada tarde',a:'19.3'},{c:'L-2',t:'No porta Agenda Escolar',a:'19.1'},{c:'L-3',t:'Uniforme / tintes / maquillaje',a:'19.5'},{c:'L-4',t:'No entrega tareas',a:'19.4'},{c:'L-5',t:'Distrae o actividades ajenas',a:'19.6'},{c:'L-6',t:'Sin material escolar',a:'19.7'}],G:[{c:'G-1',t:'Celular o dispositivo en clase',a:'12.21'},{c:'G-2',t:'Copia / plagio digital',a:'20.2'},{c:'G-3',t:'Abandona la U.E.',a:'20.10'},{c:'G-4',t:'Insultos / lenguaje soez',a:'20.20'},{c:'G-5',t:'Daño a instalaciones',a:'20.11'},{c:'G-6',t:'Falsifica firmas / notas',a:'20.17'},{c:'G-7',t:'Burlas / apodos / humillación',a:'20.6'},{c:'G-8',t:'Oculta boletín de disciplina',a:'20.12'}],MG:[{c:'MG-1',t:'Peleas físicas',a:'21.1'},{c:'MG-2',t:'Alcohol o drogas',a:'21.3a'},{c:'MG-3',t:'Armas u objetos peligrosos',a:'21.3b'},{c:'MG-4',t:'Acoso / amenazas',a:'21.5'},{c:'MG-5',t:'Hurto',a:'21.4'},{c:'MG-6',t:'Discriminación',a:'21.10'}]};
@@ -668,7 +668,7 @@ function mostrarFin(){
 async function enviar(doc){
   const total=pend.length;
   if(!total){goto('sr');return;}
-  const payload=pend.map(p=>({curso:p[1],estudiante:p[2]||'(sin nombre)',tipo:p[3],codigo:p[4],descripcion:p[5],docente:doc,version:'NSP2026v2'}));
+  const payload=pend.map(p=>({curso:p[1],estudiante:p[2]||'(sin nombre)',tipo:p[3],codigo:p[4],descripcion:p[5],docente:doc}));
   pend.forEach(p=>{p[6]=doc;regsG.push(p);});
   pend=[];actualizarBadge();renderCursos();
   if(navigator.onLine){
@@ -721,7 +721,18 @@ async function cargarPanel(){
     if(!data.length){document.getElementById('ptbody').innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">Sin registros</td></tr>';return;}
     document.getElementById('ptbody').innerHTML=[...data].reverse().map((r,i)=>{
       const idx=data.length-1-i,col=r[3]==='L'?'var(--leve)':r[3]==='G'?'var(--grave)':'var(--rojo)';
-      const nomEsc=(r[2]||'').replace(/'/g,"\\'").replace(/"/g,'\\"');const curEsc=(r[1]||'');return'<tr><td style="color:var(--muted);font-size:.7rem;white-space:nowrap">'+(r[0]||'')+'</td><td><strong>'+(r[1]||'')+'</strong></td><td style="font-size:.74rem">'+(r[2]||'')+'</td><td><span class="tt" style="background:'+col+'22;color:'+col+'">'+(r[3]==='L'?'LEVE':r[3]==='G'?'GRAVE':'MUY GRAVE')+'</span><br><small style="color:var(--muted)">'+(r[4]||'')+'</small></td><td style="font-size:.7rem">'+(r[5]||'')+'</td><td style="color:var(--muted);font-size:.7rem">'+(r[6]||'')+'</td><td style="display:flex;gap:3px;"><button onclick="generarPDF(\''+(r[2]||'').replace(/'/g,\"\\\\'\")+\"\',\"'+curEsc+'\")" style="background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.3);color:var(--accent);border-radius:4px;padding:2px 7px;cursor:pointer;font-size:.7rem;">📄</button><button onclick="elimReg('+idx+')" style="background:rgba(255,68,102,.15);border:1px solid rgba(255,68,102,.3);color:var(--rojo);border-radius:4px;padding:2px 7px;cursor:pointer;font-size:.7rem;">✕</button></td></tr>';
+      const nom=encodeURIComponent(r[2]||''),cur=encodeURIComponent(r[1]||'');
+      return'<tr>'
+        +'<td style="color:var(--muted);font-size:.7rem;white-space:nowrap">'+(r[0]||'')+'</td>'
+        +'<td><strong>'+(r[1]||'')+'</strong></td>'
+        +'<td style="font-size:.74rem">'+(r[2]||'')+'</td>'
+        +'<td><span class="tt" style="background:'+col+'22;color:'+col+'">'+(r[3]==='L'?'LEVE':r[3]==='G'?'GRAVE':'MUY GRAVE')+'</span><br><small style="color:var(--muted)">'+(r[4]||'')+'</small></td>'
+        +'<td style="font-size:.7rem">'+(r[5]||'')+'</td>'
+        +'<td style="color:var(--muted);font-size:.7rem">'+(r[6]||'')+'</td>'
+        +'<td style="display:flex;gap:3px;">'
+        +'<button onclick="generarPDF(decodeURIComponent(\''+nom+'\'),decodeURIComponent(\''+cur+'\'))" style="background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.3);color:var(--accent);border-radius:4px;padding:2px 7px;cursor:pointer;font-size:.7rem;">📄</button>'
+        +'<button onclick="elimReg('+idx+')" style="background:rgba(255,68,102,.15);border:1px solid rgba(255,68,102,.3);color:var(--rojo);border-radius:4px;padding:2px 7px;cursor:pointer;font-size:.7rem;">✕</button>'
+        +'</td></tr>';
     }).join('');
   }catch(e){document.getElementById('ptbody').innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--rojo)">⚠️ Sin conexión</td></tr>';}
 }
@@ -739,19 +750,15 @@ function elimReg(idx){
 
 // ══════ LOGIN ══════
 var SESSION = null;
-var PINS_LOCAL = {};
-try { PINS_LOCAL = JSON.parse(localStorage.getItem('nsp_pins')||'{}'); } catch(e) {}
 
 (function() {
-  // Restaurar sesión guardada — localStorage persiste al cerrar el navegador
+  // Restaurar sesión guardada
   try {
-    var s = localStorage.getItem('nsp_session');
+    var s = sessionStorage.getItem('nsp_session');
     if (s) {
       SESSION = JSON.parse(s);
       document.getElementById('slogin').classList.remove('on');
       document.getElementById('si').classList.add('on');
-      var nm = document.getElementById('lg-nombre');
-      if (nm && SESSION.nombre) nm.textContent = '👤 ' + SESSION.nombre;
     }
   } catch(e) {}
 })();
@@ -761,62 +768,38 @@ document.getElementById('lg-pin').addEventListener('keydown', function(e) {
 });
 
 async function lgIngresar() {
-  var pin = document.getElementById('lg-pin').value.trim();
-  var err = document.getElementById('lg-error');
-  var btn = document.getElementById('lg-btn');
+  var pin    = document.getElementById('lg-pin').value.trim();
+  var err    = document.getElementById('lg-error');
+  var btn    = document.getElementById('lg-btn');
   if (!pin) { lgError('Ingresa tu PIN'); return; }
   btn.disabled = true; btn.textContent = '⏳ Verificando...';
   err.style.display = 'none';
-
-  if (navigator.onLine) {
-    // ── ONLINE: verifica con Google Sheets ──
-    try {
-      var r = await fetch(SU, {
-        method: 'POST',
-        body: JSON.stringify({ action:'login', pin:pin })
-      });
-      var d = await r.json();
-      if (d.ok) {
-        SESSION = { nombre:d.nombre, rol:d.rol };
-        // Guardar sesión Y cachear PIN para uso offline futuro
-        try {
-          localStorage.setItem('nsp_session', JSON.stringify(SESSION));
-          PINS_LOCAL[pin] = { nombre:d.nombre, rol:d.rol };
-          localStorage.setItem('nsp_pins', JSON.stringify(PINS_LOCAL));
-        } catch(e) {}
-        lgEntrar(d.nombre);
-      } else {
-        lgError(d.msg || 'PIN incorrecto');
+  try {
+    var r = await fetch(SU, {
+      method: 'POST',
+      body: JSON.stringify({ action:'login', pin:pin })
+    });
+    var d = await r.json();
+    if (d.ok) {
+      SESSION = { nombre:d.nombre, rol:d.rol };
+      try { sessionStorage.setItem('nsp_session', JSON.stringify(SESSION)); } catch(e) {}
+      var sel = document.getElementById('rq-doc');
+      if (sel) {
+        var opt = document.createElement('option');
+        opt.value = d.nombre; opt.textContent = d.nombre; opt.selected = true;
+        sel.insertBefore(opt, sel.firstChild);
       }
-    } catch(e) {
-      lgError('Error de conexión. Intenta de nuevo.');
-    }
-  } else {
-    // ── OFFLINE: verifica con caché local ──
-    var cached = PINS_LOCAL[pin];
-    if (cached) {
-      SESSION = { nombre:cached.nombre, rol:cached.rol };
-      try { localStorage.setItem('nsp_session', JSON.stringify(SESSION)); } catch(e) {}
-      lgEntrar(cached.nombre);
-      showToast('📴 Modo offline — sesión guardada');
+      document.getElementById('slogin').classList.remove('on');
+      document.getElementById('si').classList.add('on');
+      var nm = document.getElementById('lg-nombre');
+      if (nm) nm.textContent = '👤 ' + d.nombre;
     } else {
-      lgError('Sin internet. Conéctate al menos una vez para guardar tu PIN.');
+      lgError(d.msg || 'PIN incorrecto');
     }
+  } catch(e) {
+    lgError('Sin conexión. Verifica internet.');
   }
   btn.disabled = false; btn.textContent = 'INGRESAR';
-}
-
-function lgEntrar(nombre) {
-  var sel = document.getElementById('rq-doc');
-  if (sel && !Array.from(sel.options).find(function(o){return o.value===nombre;})) {
-    var opt = document.createElement('option');
-    opt.value = nombre; opt.textContent = nombre; opt.selected = true;
-    sel.insertBefore(opt, sel.firstChild);
-  }
-  document.getElementById('slogin').classList.remove('on');
-  document.getElementById('si').classList.add('on');
-  var nm = document.getElementById('lg-nombre');
-  if (nm) nm.textContent = '👤 ' + nombre;
 }
 
 function lgError(msg) {
@@ -827,7 +810,7 @@ function lgError(msg) {
 
 function lgCerrarSesion() {
   SESSION = null;
-  try { localStorage.removeItem('nsp_session'); } catch(e) {}
+  try { sessionStorage.removeItem('nsp_session'); } catch(e) {}
   document.getElementById('si').classList.remove('on');
   document.getElementById('slogin').classList.add('on');
   document.getElementById('lg-pin').value = '';
@@ -1014,7 +997,6 @@ async function rqGuardar() {
         body: JSON.stringify({
           curso:cid, estId:est.id, nombre:est.nombre,
           tipo:f.tipo, codigo:f.codigo, descripcion:f.descripcion,
-          version:'NSP2026v2',
           articulo:f.articulo, fecha:fechaFmt,
           docente:docente, origen:'registro-rapido'
         })
@@ -1044,81 +1026,119 @@ if('serviceWorker' in navigator){
 }
 actualizarEstadoRed();
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════
 // PDF POR ESTUDIANTE
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════
 function generarPDF(nombre, curso){
   var todos=[].concat(regsG,pend);
-  var faltas=todos.filter(function(r){return (r[2]||'')=== nombre && (r[1]||'')=== curso;});
+  var faltas=todos.filter(function(r){return (r[2]||'')===nombre&&(r[1]||'')===curso;});
   var estInfo=(ED[curso]||[]).find(function(e){return e.nombre===nombre;})||{num:'—'};
   var nL=faltas.filter(function(r){return r[3]==='L';}).length;
   var nG=faltas.filter(function(r){return r[3]==='G';}).length;
   var nMG=faltas.filter(function(r){return r[3]==='MG';}).length;
   function getArt(cod){
-    var tipos=['L','G','MG'];
-    for(var i=0;i<tipos.length;i++){
-      var s=(INF[tipos[i]]||[]).find(function(x){return x.c===cod;});
-      if(s) return 'Art. '+s.a+' &mdash; '+s.t;
-    }
-    return cod;
+    for(var t of['L','G','MG']){var s=(INF[t]||[]).find(function(x){return x.c===cod;});if(s)return'Art. '+s.a+' — '+s.t;}return cod;
   }
   var hoy=new Date().toLocaleDateString('es-BO',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   var filas=faltas.length?faltas.map(function(r){
     var col=r[3]==='L'?'#e67e22':r[3]==='G'?'#e74c3c':'#8e44ad';
     var tipo=r[3]==='L'?'LEVE':r[3]==='G'?'GRAVE':'MUY GRAVE';
-    return '<tr><td style="padding:6px 8px;font-size:11px;color:#555;white-space:nowrap">'+(r[0]||'&mdash;')+'</td>'
-      +'<td style="padding:6px 8px;text-align:center"><span style="background:'+col+'22;color:'+col+';padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700">'+tipo+'</span></td>'
-      +'<td style="padding:6px 8px;font-size:11px;font-weight:700;color:'+col+'">'+(r[4]||'&mdash;')+'</td>'
-      +'<td style="padding:6px 8px;font-size:11px;color:#333">'+getArt(r[4])+'</td>'
-      +'<td style="padding:6px 8px;font-size:11px;color:#777">'+(r[6]||'&mdash;')+'</td></tr>';
-  }).join(''):'<tr><td colspan="5" style="text-align:center;padding:20px;color:#999;font-style:italic">Sin registros de faltas</td></tr>';
-
-  var aviso=(nG>0||nMG>0)?'<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:10px 14px;margin:14px 20px 0;font-size:11px;color:#856404">&#9888; <strong>Atenci&oacute;n:</strong> Se han registrado faltas <strong>graves o muy graves</strong> que requieren comunicaci&oacute;n formal con la Direcci&oacute;n de la Unidad Educativa (Art. 20&ndash;21 del Reglamento Interno NSP 2026).</div>':'';
-
-  var contenido='<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">'
-    +'<title>Informe &mdash; '+nombre+'</title>'
-    +'<style>@page{margin:1.5cm;}body{font-family:Arial,sans-serif;color:#222;margin:0;padding:0;}'
-    +'.header{background:#1e3a5f;color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;}'
-    +'.logo{font-size:22px;font-weight:900;color:#FFD700;letter-spacing:2px;}'
-    +'.ficha{background:#f8f9fa;border:1px solid #dee2e6;border-radius:6px;padding:12px 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 20px 0;}'
-    +'.lbl{font-size:10px;color:#666;text-transform:uppercase;letter-spacing:.5px;}'
-    +'.val{font-size:13px;font-weight:700;color:#1e3a5f;}'
-    +'.semaforo{display:flex;gap:10px;margin:14px 20px 0;}'
-    +'.sem{flex:1;text-align:center;padding:10px;border-radius:8px;}'
-    +'table{width:100%;border-collapse:collapse;margin:14px 0 0;}thead tr{background:#1e3a5f;color:#fff;}'
-    +'thead th{padding:7px 8px;text-align:left;font-size:10px;letter-spacing:.5px;}'
-    +'tbody tr:nth-child(even){background:#f8f9fa;}'
-    +'.firmas{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin:30px 20px 0;}'
-    +'.firma-line{border-top:1px solid #333;margin-top:40px;padding-top:4px;font-size:10px;color:#555;text-align:center;}'
+    return'<tr><td style="padding:5px 8px;font-size:11px;color:#555;white-space:nowrap">'+(r[0]||'—')+'</td>'
+      +'<td style="padding:5px 8px;text-align:center"><span style="background:'+col+'22;color:'+col+';padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700">'+tipo+'</span></td>'
+      +'<td style="padding:5px 8px;font-size:11px;font-weight:700;color:'+col+'">'+(r[4]||'—')+'</td>'
+      +'<td style="padding:5px 8px;font-size:11px;color:#333">'+getArt(r[4])+'</td>'
+      +'<td style="padding:5px 8px;font-size:11px;color:#777">'+(r[6]||'—')+'</td></tr>';
+  }).join(''):'<tr><td colspan="5" style="text-align:center;padding:20px;color:#999;font-style:italic">Sin registros</td></tr>';
+  var aviso=(nG>0||nMG>0)?'<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:10px 14px;margin:14px 20px 0;font-size:11px;color:#856404">⚠ <strong>Atención:</strong> Faltas graves o muy graves requieren comunicación con Dirección (Art. 20–21 Reglamento NSP 2026).</div>':'';
+  var html='<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Informe — '+nombre+'</title>'
+    +'<style>@page{margin:1.5cm}body{font-family:Arial,sans-serif;color:#222;margin:0}'
+    +'.hdr{background:#1e3a5f;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}'
+    +'.logo{font-size:20px;font-weight:900;color:#FFD700;letter-spacing:2px}'
+    +'.ficha{background:#f8f9fa;border:1px solid #dee2e6;border-radius:6px;padding:12px 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 20px 0}'
+    +'.lbl{font-size:10px;color:#666;text-transform:uppercase;letter-spacing:.5px}'
+    +'.val{font-size:13px;font-weight:700;color:#1e3a5f}'
+    +'.sem{display:flex;gap:10px;margin:12px 20px 0}'
+    +'.sb{flex:1;text-align:center;padding:10px;border-radius:8px}'
+    +'table{width:100%;border-collapse:collapse;margin:12px 0 0}'
+    +'thead tr{background:#1e3a5f;color:#fff}'
+    +'thead th{padding:6px 8px;text-align:left;font-size:10px;letter-spacing:.5px}'
+    +'tbody tr:nth-child(even){background:#f8f9fa}'
+    +'.firmas{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin:30px 20px 0}'
+    +'.fl{border-top:1px solid #333;margin-top:40px;padding-top:4px;font-size:10px;color:#555;text-align:center}'
     +'</style></head><body>'
-    +'<div class="header"><div><div class="logo">NSP 2026</div>'
-    +'<div style="font-size:10px;opacity:.8">U.E. Marista &ldquo;Nuestra Se&ntilde;ora del Pilar&rdquo; &mdash; Fe y Alegr&iacute;a</div>'
-    +'<div style="font-size:10px;opacity:.8">Secundaria Comunitaria Productiva &mdash; Cochabamba, Bolivia</div></div>'
+    +'<div class="hdr"><div><div class="logo">NSP 2026</div>'
+    +'<div style="font-size:10px;opacity:.8">U.E. Marista "Nuestra Señora del Pilar" — Fe y Alegría — Cochabamba</div></div>'
     +'<div style="text-align:right"><div style="font-size:13px;font-weight:700">INFORME DISCIPLINARIO</div>'
     +'<div style="font-size:10px;opacity:.8">Para conocimiento de padres y tutores</div></div></div>'
     +'<div class="ficha">'
     +'<div><div class="lbl">Estudiante</div><div class="val">'+nombre+'</div></div>'
-    +'<div><div class="lbl">Curso</div><div class="val">'+curso+' &nbsp;&middot;&nbsp; N&deg; '+estInfo.num+'</div></div>'
-    +'<div><div class="lbl">Gesti&oacute;n</div><div class="val">2026</div></div>'
+    +'<div><div class="lbl">Curso</div><div class="val">'+curso+' · N° '+estInfo.num+'</div></div>'
+    +'<div><div class="lbl">Gestión</div><div class="val">2026</div></div>'
     +'<div><div class="lbl">Total faltas</div><div class="val">'+faltas.length+'</div></div></div>'
-    +'<div class="semaforo">'
-    +'<div class="sem" style="background:#fff3e0;color:#e67e22;border:1px solid #f0a500"><div style="font-size:26px;font-weight:900">'+nL+'</div><div style="font-size:10px;font-weight:700">LEVES</div></div>'
-    +'<div class="sem" style="background:#fdecea;color:#e74c3c;border:1px solid #e74c3c"><div style="font-size:26px;font-weight:900">'+nG+'</div><div style="font-size:10px;font-weight:700">GRAVES</div></div>'
-    +'<div class="sem" style="background:#f3e5f5;color:#8e44ad;border:1px solid #8e44ad"><div style="font-size:26px;font-weight:900">'+nMG+'</div><div style="font-size:10px;font-weight:700">MUY GRAVES</div></div></div>'
-    +'<div style="margin:14px 20px 0"><table><thead><tr>'
-    +'<th>FECHA / HORA</th><th>TIPO</th><th>C&Oacute;DIGO</th><th>INFRACCI&Oacute;N &mdash; ART&Iacute;CULO</th><th>DOCENTE</th>'
+    +'<div class="sem">'
+    +'<div class="sb" style="background:#fff3e0;color:#e67e22;border:1px solid #f0a500"><div style="font-size:24px;font-weight:900">'+nL+'</div><div style="font-size:10px;font-weight:700">LEVES</div></div>'
+    +'<div class="sb" style="background:#fdecea;color:#e74c3c;border:1px solid #e74c3c"><div style="font-size:24px;font-weight:900">'+nG+'</div><div style="font-size:10px;font-weight:700">GRAVES</div></div>'
+    +'<div class="sb" style="background:#f3e5f5;color:#8e44ad;border:1px solid #8e44ad"><div style="font-size:24px;font-weight:900">'+nMG+'</div><div style="font-size:10px;font-weight:700">MUY GRAVES</div></div></div>'
+    +'<div style="margin:12px 20px 0"><table><thead><tr>'
+    +'<th>FECHA / HORA</th><th>TIPO</th><th>CÓDIGO</th><th>INFRACCIÓN — ARTÍCULO</th><th>DOCENTE</th>'
     +'</tr></thead><tbody>'+filas+'</tbody></table></div>'
     +aviso
-    +'<div class="firmas">'
-    +'<div><div class="firma-line"><strong>Docente responsable</strong><br>U.E. Marista NSP 2026</div></div>'
-    +'<div><div class="firma-line"><strong>Padre / Madre / Tutor</strong><br>Firma de recepci&oacute;n</div></div></div>'
-    +'<div style="font-size:9px;color:#999;text-align:right;margin:10px 20px 0">Generado: '+hoy+' &middot; Sistema Disciplinario NSP 2026</div>'
+    +'<div class="firmas"><div><div class="fl"><strong>Docente responsable</strong><br>U.E. Marista NSP 2026</div></div>'
+    +'<div><div class="fl"><strong>Padre / Madre / Tutor</strong><br>Firma de recepción</div></div></div>'
+    +'<div style="font-size:9px;color:#999;text-align:right;margin:10px 20px 0">Generado: '+hoy+' · Sistema Disciplinario NSP 2026</div>'
     +'</body></html>';
-
-  var w=window.open('','_blank','width=850,height=700');
-  if(!w){showToast('Permite ventanas emergentes para generar PDF',true);return;}
-  w.document.open();w.document.write(contenido);w.document.close();
-  setTimeout(function(){w.print();},800);
+  var w=window.open('','_blank','width=860,height=700');
+  if(!w){showToast('Permite ventanas emergentes',true);return;}
+  w.document.open();w.document.write(html);w.document.close();
+  setTimeout(function(){w.print();},600);
 }
-</script>
-</body>
+
+// PDF DE TODOS LOS ESTUDIANTES CON FALTAS
+function generarPDFCurso(){
+  if(!regsG.length){showToast('Primero carga el panel con datos',true);return;}
+  var estudiantes=[...new Set(regsG.map(function(r){return r[2];}))].filter(Boolean).sort();
+  if(!estudiantes.length){showToast('Sin estudiantes con faltas',true);return;}
+  function getArt(cod){
+    for(var t of['L','G','MG']){var s=(INF[t]||[]).find(function(x){return x.c===cod;});if(s)return'Art.'+s.a+' — '+s.t;}return cod;
+  }
+  var bloques=estudiantes.map(function(nombre){
+    var f=regsG.filter(function(r){return r[2]===nombre;});
+    var cur=f[0]?f[0][1]:'';
+    var est=(ED[cur]||[]).find(function(e){return e.nombre===nombre;})||{num:'—'};
+    var nL=f.filter(function(r){return r[3]==='L';}).length;
+    var nG=f.filter(function(r){return r[3]==='G';}).length;
+    var nMG=f.filter(function(r){return r[3]==='MG';}).length;
+    var filas=f.map(function(r){
+      var col=r[3]==='L'?'#e67e22':r[3]==='G'?'#e74c3c':'#8e44ad';
+      var tipo=r[3]==='L'?'LEVE':r[3]==='G'?'GRAVE':'MUY GRAVE';
+      return'<tr><td style="padding:4px 6px;font-size:10px;color:#555">'+(r[0]||'—')+'</td>'
+        +'<td><span style="background:'+col+'22;color:'+col+';padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700">'+tipo+'</span></td>'
+        +'<td style="font-size:10px;font-weight:700;color:'+col+'">'+(r[4]||'—')+'</td>'
+        +'<td style="font-size:10px;color:#333">'+getArt(r[4])+'</td>'
+        +'<td style="font-size:10px;color:#777">'+(r[6]||'—')+'</td></tr>';
+    }).join('');
+    return'<div style="page-break-after:always;padding:15px 20px;">'
+      +'<div style="background:#1e3a5f;color:#fff;padding:10px 14px;border-radius:6px 6px 0 0;display:flex;justify-content:space-between;">'
+      +'<div><div style="font-size:9px;opacity:.7">NSP 2026 · Informe Disciplinario</div><strong style="font-size:13px">'+nombre+'</strong></div>'
+      +'<div style="text-align:right;font-size:11px"><strong>'+cur+' · N°'+est.num+'</strong><br><span style="color:#FFD700">'+f.length+' falta'+(f.length!==1?'s':'')+'</span></div></div>'
+      +'<div style="display:flex;gap:8px;padding:8px 0;">'
+      +'<div style="flex:1;text-align:center;background:#fff3e0;border-radius:4px;padding:6px"><div style="font-size:18px;font-weight:900;color:#e67e22">'+nL+'</div><div style="font-size:9px;color:#e67e22">LEVES</div></div>'
+      +'<div style="flex:1;text-align:center;background:#fdecea;border-radius:4px;padding:6px"><div style="font-size:18px;font-weight:900;color:#e74c3c">'+nG+'</div><div style="font-size:9px;color:#e74c3c">GRAVES</div></div>'
+      +'<div style="flex:1;text-align:center;background:#f3e5f5;border-radius:4px;padding:6px"><div style="font-size:18px;font-weight:900;color:#8e44ad">'+nMG+'</div><div style="font-size:9px;color:#8e44ad">MUY GRAVES</div></div></div>'
+      +'<table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#eee">'
+      +'<th style="padding:4px 6px;text-align:left;font-size:10px">Fecha</th><th style="font-size:10px">Tipo</th>'
+      +'<th style="font-size:10px">Cód.</th><th style="font-size:10px">Infracción</th><th style="font-size:10px">Docente</th></tr></thead>'
+      +'<tbody>'+filas+'</tbody></table>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:20px;">'
+      +'<div style="text-align:center;border-top:1px solid #333;margin-top:30px;padding-top:4px;font-size:9px;color:#555">Docente responsable</div>'
+      +'<div style="text-align:center;border-top:1px solid #333;margin-top:30px;padding-top:4px;font-size:9px;color:#555">Padre / Madre / Tutor</div></div>'
+      +'</div>';
+  }).join('');
+  var w=window.open('','_blank');
+  if(!w){showToast('Permite ventanas emergentes',true);return;}
+  w.document.open();
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Informes NSP 2026</title>'
+    +'<style>@page{margin:1cm}body{font-family:Arial,sans-serif;margin:0}</style></head>'
+    +'<body>'+bloques+'<script>window.onload=function(){window.print();}<\/script></body></html>');
+  w.document.close();
+}
